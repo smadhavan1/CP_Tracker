@@ -33,8 +33,7 @@ const questionSchema = new mongoose.Schema(
 			type: [String]
 		},
 		solvedDate: {
-			type: Date,
-			default: Date.now
+			type: Date
 		},
 		timeTaken: {
 			type: Number
@@ -43,14 +42,14 @@ const questionSchema = new mongoose.Schema(
 			type: String
 		},
 		favourite: {
-			type: Boolean
+			type: Boolean,
+			default: false
 		},
 		solutionLink: {
 			type: String
 		},
 		lastRevisionDate: {
-			type: Date,
-			default: Date.now
+			type: Date
 		},
 		nextRevisionDate: {
 			type: Date

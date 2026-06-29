@@ -1,0 +1,9 @@
+<%- layout('layouts/boilerplate') %>
+<ul>
+	<% for(let question of questions){{ { }}
+	%>
+	<li><a href="/questions/<%= question._id %>"><%= question.questionTitle%></a></li>
+	<%
+	{{ } }}
+	%>
+</ul>
