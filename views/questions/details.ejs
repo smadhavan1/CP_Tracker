@@ -5,11 +5,17 @@
 		<span class="me-2"><%= difficulty %></span>
 		<span class="me-2"><%= platform %></span>
 		<a href="<%= link %>">Question Link</a>
+		<% if(tags && tags.length) {{ { }} %>
 		<div>
 			Tags : <% tags.forEach((tag)=>{{ { }} %>
 			<span class="me-1"><%= tag %></span>
 			<% {{ } }}) %>
 		</div>
+		<% {{ } }} else {{ { }} %>
+		<div>
+			No tags
+		</div>
+		<% {{ } }} %>
 	</section>
 	<hr />
 	<section id="solution">
@@ -17,7 +23,7 @@
 		<% if(solvedDate) {{ { }}%>
 		<p>Solved on <%= solvedDate %></p>
 		<% {{ } }} %> <% if(timeTaken) {{ { }}%>
-		<p>Solved in <%= timeTaken %> minutes</p>
+		<p>Time taken : <%= timeTaken %> minutes</p>
 		<% {{ } }} %> <% if(notes) {{ { }}%>
 		<p>Notes: <%= notes %></p>
 		<% {{ } }} %> <% if(solutionLink) {{ { }} %>
@@ -36,8 +42,8 @@
 		<% {{ } }} %>
 	</section>
 	<hr />
-	<p><a href="/questions/<%= _id %>/edit">Edit</a></p>
-	<form action="/questions/<%= _id %>?_method=delete" method="post">
-		<button>Delete</button>
+	<a href="/questions/<%= _id %>/edit" class="btn btn-warning">Edit</a>
+	<form class="d-inline" action="/questions/<%= _id %>?_method=delete" method="post">
+		<button class="btn btn-danger">Delete</button>
 	</form>
 </div>

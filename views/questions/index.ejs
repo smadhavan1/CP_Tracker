@@ -1,9 +1,24 @@
 <%- layout('layouts/boilerplate') %>
-<ul>
-	<% for(let question of questions){{ { }}
-	%>
-	<li><a href="/questions/<%= question._id %>"><%= question.title%></a></li>
-	<%
-	{{ } }}
-	%>
-</ul>
+<h1 class="text-center">Questions</h1>
+<div class="my-3 container">
+		<% for(let question of questions){{ { }} %>
+			<div class="card mb-3 w-50 mx-auto">
+				<h5 class="card-header"><%= question.platform %> #<%= question.ID %></h5>
+				<div class="card-body">
+					<h5 class="card-title"><%= question.title %> (<%= question.difficulty %>)</h5>
+					<p><%= question.status %></p>
+					<a href="/questions/<%= question._id %>" class="btn btn-primary">Details</a>
+					<a href="<%= question.link %>" class="btn btn-primary"><%= question.platform %></a>
+				</div>
+				<div class="card-footer">
+					<% if(question.tags && question.tags.length) {{ { }} %>
+						<% question.tags.forEach(tag => {{ { }} %>
+							<span class="badge rounded-pill text-bg-secondary"><%= tag %></span> 
+						<% {{ } }}); %>
+					<% {{ } }} else {{ { }}%>
+						<span>No tags</span>
+					<% {{ } }} %>
+				</div>
+			</div>
+		<% {{ } }} %>
+</div>

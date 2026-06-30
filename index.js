@@ -6,6 +6,9 @@ import mongoose from "mongoose";
 import methodOverride from "method-override";
 
 import tagList from "./constants/tags.js";
+import difficultyLevels from "./constants/difficultyLevels.js"
+import platforms from "./constants/platforms.js"
+import statusOptions from "./constants/statusOptions.js"
 
 mongoose
 	.connect("mongodb://127.0.0.1:27017/cp_tracker")
@@ -26,10 +29,6 @@ app.set("views", path.join(__dirname, "/views"));
 
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
-
-const difficultyLevels = ["Easy", "Medium", "Hard"];
-const platforms = ["Codeforces", "CodeChef", "LeetCode", "AtCoder", "HackerRank", "CSES", "Other"];
-const statusOptions = ["Solved", "Attempted", "Not Started"];
 
 app.listen(3000, () => {
 	console.log("Listening on port 3000!");
@@ -52,6 +51,13 @@ app.post("/questions", async (req, res) => {
 	let question = req.body.question;
 	if (question.favourite === "on") question.favourite = true;
 	else question.favourite = false;
+
+	if (question.status !== "Solved") question.solvedDate = "";
+
+	if(!question.link.startsWith("https://"))
+		question.link="https://"+question.link;
+	if(question.solutionLink && !question.solutionLink.startsWith("https://"))
+		question.solutionLink="https://"+question.solutionLink;
 
 	await Question.insertOne({ ...question });
 	res.redirect("/questions");
@@ -80,6 +86,12 @@ app.patch("/questions/:id", async (req, res) => {
 	if (question.favourite === "on") question.favourite = true;
 	else question.favourite = false;
 
+	if(!question.link.startsWith("https://"))
+		question.link="https://"+question.link;
+	if(question.solutionLink && !question.solutionLink.startsWith("https://"))
+		question.solutionLink="https://"+question.solutionLink;
+
+	if (question.status !== "Solved") question.solvedDate = "";
 	question.tags = question.tags || [];
 
 	await Question.findByIdAndUpdate(id, { ...question });
