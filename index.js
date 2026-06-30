@@ -5,6 +5,8 @@ import Question from "./models/question.js";
 import mongoose from "mongoose";
 import methodOverride from "method-override";
 
+import tagList from "./constants/tags.js";
+
 mongoose
 	.connect("mongodb://127.0.0.1:27017/cp_tracker")
 	.then(() => {
@@ -27,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const difficultyLevels = ["Easy", "Medium", "Hard"];
 const platforms = ["Codeforces", "CodeChef", "LeetCode", "AtCoder", "HackerRank", "CSES", "Other"];
-const statusOptions = ["Solved", "Attempted,", "Not Started"];
+const statusOptions = ["Solved", "Attempted", "Not Started"];
 
 app.listen(3000, () => {
 	console.log("Listening on port 3000!");
@@ -38,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/questions/new", (req, res) => {
-	res.render("questions/new");
+	res.render("questions/new", { difficultyLevels, platforms, statusOptions, tagList });
 });
 
 app.get("/questions", async (req, res) => {
@@ -47,30 +49,40 @@ app.get("/questions", async (req, res) => {
 });
 
 app.post("/questions", async (req, res) => {
-	if (req.body.favourite === "on") req.body.favourite = true;
-	else req.body.favourite = false;
+	let question = req.body.question;
+	if (question.favourite === "on") question.favourite = true;
+	else question.favourite = false;
 
-	await Question.insertOne({ ...req.body });
+	await Question.insertOne({ ...question });
 	res.redirect("/questions");
 });
 
 app.get("/questions/:id", async (req, res) => {
 	const { id } = req.params;
-	const question = await Question.findById(id);
-	res.render("questions/details", { question });
+	const question = await Question.findById(id).lean();
+	res.render("questions/details", { ...question });
 });
 
 app.get("/questions/:id/edit", async (req, res) => {
 	const { id } = req.params;
-	const question = await Question.findById(id);
-	res.render("questions/edit", { question, difficultyLevels, platforms, statusOptions });
+	const question = await Question.findById(id).lean();
+
+	question.solvedDate = question.solvedDate ? question.solvedDate.toISOString().split("T")[0] : null;
+	question.lastRevisionDate = question.lastRevisionDate ? question.lastRevisionDate.toISOString().split("T")[0] : null;
+	question.nextRevisionDate = question.nextRevisionDate ? question.nextRevisionDate.toISOString().split("T")[0] : null;
+
+	res.render("questions/edit", { ...question, difficultyLevels, platforms, statusOptions, tagList });
 });
 
 app.patch("/questions/:id", async (req, res) => {
 	const { id } = req.params;
-	if (req.body.favourite === "on") req.body.favourite = true;
-	else req.body.favourite = false;
-	await Question.findByIdAndUpdate(id, { ...req.body });
+	let question = req.body.question;
+	if (question.favourite === "on") question.favourite = true;
+	else question.favourite = false;
+
+	question.tags = question.tags || [];
+
+	await Question.findByIdAndUpdate(id, { ...question });
 	res.redirect(`/questions/${id}`);
 });
 

@@ -1,16 +1,17 @@
 import mongoose from "mongoose";
+import tagList from "../constants/tags.js";
 
 const questionSchema = new mongoose.Schema(
 	{
-		questionID: {
+		ID: {
 			type: String,
 			required: true
 		},
-		questionTitle: {
+		title: {
 			type: String,
 			required: true
 		},
-		questionLink: {
+		link: {
 			type: String,
 			required: true
 		},
@@ -30,7 +31,8 @@ const questionSchema = new mongoose.Schema(
 			required: true
 		},
 		tags: {
-			type: [String]
+			type: [String],
+			enum: tagList
 		},
 		solvedDate: {
 			type: Date

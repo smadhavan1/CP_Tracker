@@ -2,130 +2,88 @@
 <div class="my-3 container">
 	<h1 class="text-center">Edit question</h1>
 	<div class="col-md-7 mx-auto">
-		<form action="/questions/<%= question._id %>?_method=patch" method="post">
+		<form action="/questions/<%= _id %>?_method=patch" method="post">
 			<div class="container">
 				<div class="mb-3">
-					<label for="questionID">Question ID</label>
-					<input type="text" class="form-control" name="questionID" id="questionID" placeholder="Enter the question ID" value="<%= question.questionID %>" required autofocus />
+					<label for="ID">Question ID</label>
+					<input type="text" class="form-control" name=question[ID] id="ID" placeholder="Enter the question ID" value="<%= ID %>" required autofocus />
 				</div>
 				<div class="mb-3">
-					<label for="questionTitle">Question Title</label>
-					<input type="text" class="form-control" name="questionTitle" id="questionTitle" placeholder="Enter the question title" value="<%= question.questionTitle %>" required />
+					<label for="title">Question Title</label>
+					<input type="text" class="form-control" name=question[title] id="title" placeholder="Enter the question title" value="<%= title %>" required />
 				</div>
 				<div class="mb-3">
-					<label for="questionLink">Question link</label>
-					<input type="text" class="form-control" name="questionLink" id="questionLink" placeholder="Enter the question link" value="<%= question.questionLink %>" required />
+					<label for="link">Question link</label>
+					<input type="text" class="form-control" name=question[link] id="link" placeholder="Enter the question link" value="<%= link %>" required />
 				</div>
 				<div class="mb-3">
 					<label for="difficulty">Difficulty</label>
-					<select class="form-select" name="difficulty" id="difficulty" required>
+					<select class="form-select" name=question[difficulty] id="difficulty" required>
 						<% for(let diff of difficultyLevels){{ { }} %>
-							<option value="<%= diff %>" <%= question.difficulty===diff?"selected":"" %>><%= diff %></option>
+							<option value="<%= diff %>" <%= difficulty===diff?"selected":"" %>><%= diff %></option>
 						<%{{ } }}%>
 					</select>
 				</div>
 				<div class="mb-3">
 					<label for="platform">Platform</label>
-					<select class="form-select" name="platform" id="platform" required>
+					<select class="form-select" name=question[platform] id="platform" required>
 						<% for(let platform of platforms){{ { }} %>
-							<option value="<%= platform %>" <%= question.platform===platform?"selected":"" %>><%= platform %></option>
+							<option value="<%= platform %>" <%= platform===platform?"selected":"" %>><%= platform %></option>
 						<%{{ } }}%>
 					</select>
 				</div>
 				<div class="mb-3">
 					<label for="status">Status</label>
-					<select class="form-select" name="status" id="status" required>
+					<select class="form-select" name=question[status] id="status" required>
 						<% for(let status of statusOptions){{ { }} %>
-							<option value="<%= status %>" <%= question.status===status?"selected":"" %>><%= status %></option>
+							<option value="<%= status %>" <%= status===status?"selected":"" %>><%= status %></option>
 						<%{{ } }}%>
 					</select>
 				</div>
 				<div class="mb-3 container">
 					<label for="tags">Tags</label>
 					<div class="row">
+						<% tagList.forEach((tag,idx) => {{ { }} %> <% if(idx%14===0) {{ { }}%>
 						<div class="col">
-							<label><input type="checkbox" name="tags[]" value="Arrays" /> Arrays</label><br />
-							<label><input type="checkbox" name="tags[]" value="Strings" /> Strings</label><br />
-							<label><input type="checkbox" name="tags[]" value="Math" /> Math</label><br />
-							<label><input type="checkbox" name="tags[]" value="Implementation" /> Implementation</label><br />
-							<label><input type="checkbox" name="tags[]" value="Simulation" /> Simulation</label><br />
-							<label><input type="checkbox" name="tags[]" value="Sorting" /> Sorting</label><br />
-							<label><input type="checkbox" name="tags[]" value="Searching" /> Searching</label><br />
-							<label><input type="checkbox" name="tags[]" value="Binary Search" /> Binary Search</label><br />
-							<label><input type="checkbox" name="tags[]" value="Two Pointers" /> Two Pointers</label><br />
-							<label><input type="checkbox" name="tags[]" value="Sliding Window" /> Sliding Window</label><br />
-							<label><input type="checkbox" name="tags[]" value="Prefix Sum" /> Prefix Sum</label><br />
-							<label><input type="checkbox" name="tags[]" value="Hashing" /> Hashing</label><br />
-							<label><input type="checkbox" name="tags[]" value="Bit Manipulation" /> Bit Manipulation</label><br />
-							<label><input type="checkbox" name="tags[]" value="Recursion" /> Recursion</label><br />
+							<% {{ } }} %> <label><input type="checkbox" <%= tags.includes(tag)?"checked":"" %> name="question[tags]" value="<%= tag %>" /> <%= tag %></label><br />
+							<% if((idx+1)%14===0) {{ { }}%>
 						</div>
-						<div class="col">
-							<label><input type="checkbox" name="tags[]" value="Backtracking" /> Backtracking</label><br />
-							<label><input type="checkbox" name="tags[]" value="Greedy" /> Greedy</label><br />
-							<label><input type="checkbox" name="tags[]" value="Dynamic Programming" /> Dynamic Programming</label><br />
-							<label><input type="checkbox" name="tags[]" value="Divide and Conquer" /> Divide and Conquer</label><br />
-							<label><input type="checkbox" name="tags[]" value="Brute Force" /> Brute Force</label><br />
-							<label><input type="checkbox" name="tags[]" value="Trees" /> Trees</label><br />
-							<label><input type="checkbox" name="tags[]" value="Binary Trees" /> Binary Trees</label><br />
-							<label><input type="checkbox" name="tags[]" value="Binary Search Trees" /> Binary Search Trees</label><br />
-							<label><input type="checkbox" name="tags[]" value="Graphs" /> Graphs</label><br />
-							<label><input type="checkbox" name="tags[]" value="DFS" /> DFS</label><br />
-							<label><input type="checkbox" name="tags[]" value="BFS" /> BFS</label><br />
-							<label><input type="checkbox" name="tags[]" value="Shortest Path" /> Shortest Path</label><br />
-							<label><input type="checkbox" name="tags[]" value="Topological Sort" /> Topological Sort</label><br />
-							<label><input type="checkbox" name="tags[]" value="Disjoint Set Union" /> Disjoint Set Union</label><br />
-						</div>
-						<div class="col">
-							<label><input type="checkbox" name="tags[]" value="Minimum Spanning Tree" /> Minimum Spanning Tree</label><br />
-							<label><input type="checkbox" name="tags[]" value="Trie" /> Trie</label><br />
-							<label><input type="checkbox" name="tags[]" value="Heap / Priority Queue" /> Heap / Priority Queue</label><br />
-							<label><input type="checkbox" name="tags[]" value="Stack" /> Stack</label><br />
-							<label><input type="checkbox" name="tags[]" value="Queue" /> Queue</label><br />
-							<label><input type="checkbox" name="tags[]" value="Linked List" /> Linked List</label><br />
-							<label><input type="checkbox" name="tags[]" value="Segment Tree" /> Segment Tree</label><br />
-							<label><input type="checkbox" name="tags[]" value="Fenwick Tree" /> Fenwick Tree</label><br />
-							<label><input type="checkbox" name="tags[]" value="Monotonic Stack" /> Monotonic Stack</label><br />
-							<label><input type="checkbox" name="tags[]" value="Monotonic Queue" /> Monotonic Queue</label><br />
-							<label><input type="checkbox" name="tags[]" value="Geometry" /> Geometry</label><br />
-							<label><input type="checkbox" name="tags[]" value="Combinatorics" /> Combinatorics</label><br />
-							<label><input type="checkbox" name="tags[]" value="Number Theory" /> Number Theory</label><br />
-							<label><input type="checkbox" name="tags[]" value="Matrix" /> Matrix</label><br />
-						</div>
+						<% {{ } }} %> <% {{ } }}) %>
 					</div>
 				</div>
 				<div class="mb-3">
 					<label for="solvedDate">Solved date</label>
-					<input type="date" class="form-control" name="solvedDate" id="solvedDate" placeholder="Enter the solving date" />
+					<input type="date" class="form-control" name=question[solvedDate] id="solvedDate" placeholder="Enter the solving date" value="<%= solvedDate?solvedDate:"" %>"/>
 				</div>
 				<div class="mb-3">
 					<label for="timeTaken">Time taken</label>
-					<input type="number" class="form-control" name="timeTaken" id="timeTaken" placeholder="Enter the time taken in minutes" min="0" />
+					<input type="number" class="form-control" name=question[timeTaken] id="timeTaken" placeholder="Enter the time taken in minutes" min="0" value="<%= timeTaken?timeTaken:"" %>"/>
 				</div>
 				<div class="mb-3">
 					<label for="notes">Notes</label>
-					<textarea class="form-control" name="notes" id="notes" placeholder="Enter notes (if any)" rows="5" cols="30"></textarea>
+					<textarea class="form-control" name=question[notes] id="notes" placeholder="Enter notes (if any)" rows="5" cols="30"><%= notes %></textarea>
 				</div>
 				<div class="mb-3">
 					<div class="form-check form-switch">
 						<label class="form-check-label" for="favourite">Favourite</label>
-						<input class="form-check-input" type="checkbox" <%= question.favourite?"checked":"" %> role="switch" name="favourite" id="favourite" />
+						<input class="form-check-input" type="checkbox" role="switch" name=question[favourite] id="favourite" <%= favourite?"checked":"" %>/>
 					</div>
 				</div>
 				<div class="mb-3">
 					<label for="solutionLink">Solution link</label>
-					<input type="text" class="form-control" name="solutionLink" id="solutionLink" placeholder="Enter the solution link" />
+					<input type="text" class="form-control" name=question[solutionLink] id="solutionLink" placeholder="Enter the solution link" value="<%= solutionLink?solutionLink:"" %>"/>
 				</div>
 				<div class="mb-3">
 					<label for="lastRevisionDate">Last revision date</label>
-					<input type="date" class="form-control" name="lastRevisionDate" id="lastRevisionDate" placeholder="Enter the last revision date" />
+					<input type="date" class="form-control" name=question[lastRevisionDate] id="lastRevisionDate" placeholder="Enter the last revision date" value="<%= lastRevisionDate?lastRevisionDate:"" %>"/>
 				</div>
 				<div class="mb-3">
 					<label for="nextRevisionDate">Next revision date</label>
-					<input type="date" class="form-control" name="nextRevisionDate" id="nextRevisionDate" placeholder="Enter the next revision date" />
+					<input type="date" class="form-control" name=question[nextRevisionDate] id="nextRevisionDate" placeholder="Enter the next revision date" value="<%= nextRevisionDate?nextRevisionDate:"" %>"/>
 				</div>
 				<div class="mb-3">
 					<label for="revisionCount">Revision count</label>
-					<input type="number" class="form-control" name="revisionCount" id="revisionCount" placeholder="Enter the revision count" min="0" value="0" />
+					<input type="number" class="form-control" name=question[revisionCount] id="revisionCount" placeholder="Enter the revision count" min="0" value="<%= revisionCount>=0?revisionCount:"" %>" />
 				</div>
 				<button>Submit</button>
 			</div>

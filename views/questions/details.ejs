@@ -1,43 +1,43 @@
 <%- layout('layouts/boilerplate') %>
 <div class="mx-auto my-3 w-50">
-	<h1><%= question.questionID %>. <%= question.questionTitle %> <% if(question.favourite) {{ { }} %> ⭐ <% {{ } }} else {{ { }} %> ☆ <% {{ } }} %></h1>
+	<h1><%= ID %>. <%= title %> <% if(favourite) {{ { }} %> ⭐ <% {{ } }} else {{ { }} %> ☆ <% {{ } }} %></h1>
 	<section id="question">
-		<span class="me-2"><%= question.difficulty %></span>
-		<span class="me-2"><%= question.platform %></span>
-		<a href="<%= question.questionLink %>">Question Link</a>
+		<span class="me-2"><%= difficulty %></span>
+		<span class="me-2"><%= platform %></span>
+		<a href="<%= link %>">Question Link</a>
 		<div>
-			Tags : <% question.tags.forEach((tag)=>{{ { }} %>
+			Tags : <% tags.forEach((tag)=>{{ { }} %>
 			<span class="me-1"><%= tag %></span>
 			<% {{ } }}) %>
 		</div>
 	</section>
 	<hr />
 	<section id="solution">
-		<span class="me-2">Status : <%= question.status %></span>
-		<% if(question.solveDate) {{ { }}%>
-		<p>Solved on <%= question.solveDate %></p>
-		<% {{ } }} %> <% if(question.timeTaken) {{ { }}%>
-		<p>Solved in <%= question.timeTaken %> minutes</p>
-		<% {{ } }} %> <% if(question.notes) {{ { }}%>
-		<p>Notes: <%= question.notes %></p>
-		<% {{ } }} %> <% if(question.solutionLink) {{ { }} %>
-		<a href="<%= question.questionLink %>">Solution Link</a>
+		<span class="me-2">Status : <%= status %></span>
+		<% if(solvedDate) {{ { }}%>
+		<p>Solved on <%= solvedDate %></p>
+		<% {{ } }} %> <% if(timeTaken) {{ { }}%>
+		<p>Solved in <%= timeTaken %> minutes</p>
+		<% {{ } }} %> <% if(notes) {{ { }}%>
+		<p>Notes: <%= notes %></p>
+		<% {{ } }} %> <% if(solutionLink) {{ { }} %>
+		<a href="<%= solutionLink %>">Solution Link</a>
 		<% {{ } }} %>
 	</section>
 	<hr />
 
 	<section id="revision">
-		<% if(question.lastRevisionDate) {{ { }}%>
-		<p>Last Revision Date: <%= question.lastRevisionDate %></p>
-		<% {{ } }} %> <% if(question.nextRevisionDate) {{ { }}%>
-		<p>Next Revision Date: <%= question.nextRevisionDate %></p>
-		<% {{ } }} %> <% if(question.revisionCount>=0) {{ { }}%>
-		<p>Revision Count: <%= question.revisionCount %></p>
+		<% if(lastRevisionDate) {{ { }}%>
+		<p>Last Revision Date: <%= lastRevisionDate %></p>
+		<% {{ } }} %> <% if(nextRevisionDate) {{ { }}%>
+		<p>Next Revision Date: <%= nextRevisionDate %></p>
+		<% {{ } }} %> <% if(revisionCount>=0) {{ { }}%>
+		<p>Revision Count: <%= revisionCount %></p>
 		<% {{ } }} %>
 	</section>
 	<hr />
-	<p><a href="/questions/<%= question._id %>/edit">Edit</a></p>
-	<form action="/questions/<%= question._id %>?_method=delete" method="post">
+	<p><a href="/questions/<%= _id %>/edit">Edit</a></p>
+	<form action="/questions/<%= _id %>?_method=delete" method="post">
 		<button>Delete</button>
 	</form>
 </div>
