@@ -18,9 +18,9 @@
 				</div>
 				<div class="mb-3">
 					<label for="link">Question link</label>
-						<input type="text" class="form-control" name=question[link] id="link" placeholder="Enter the question link" value="<%= link %>" required />
+						<input type="url" class="form-control" name=question[link] id="link" placeholder="Enter the question link" value="<%= link %>" required />
 					<div class="valid-feedback">Looks good!</div>
-					<div class="invalid-feedback">Please enter the question link.</div>
+					<div class="invalid-feedback">Please enter a valid question link.</div>
 				</div>
 				<div class="mb-3">
 					<label for="difficulty">Difficulty</label>
@@ -69,11 +69,13 @@
 					<label for="solvedDate">Solved date</label>
 					<input type="date" class="form-control" name=question[solvedDate] id="solvedDate" placeholder="Enter the solving date" value="<%= solvedDate?solvedDate:"" %>"/>
 					<div class="valid-feedback">Looks good!</div>
+					<div class="invalid-feedback">Please enter a valid date.</div>
 				</div>
 				<div class="mb-3">
 					<label for="timeTaken">Time taken</label>
 					<input type="number" class="form-control" name=question[timeTaken] id="timeTaken" placeholder="Enter the time taken in minutes" min="0" value="<%= timeTaken?timeTaken:"" %>"/>
 					<div class="valid-feedback">Looks good!</div>
+					<div class="invalid-feedback">Please enter a valid value.</div>
 				</div>
 				<div class="mb-3">
 					<label for="notes">Notes</label>
@@ -89,23 +91,27 @@
 				</div>
 				<div class="mb-3">
 					<label for="solutionLink">Solution link</label>
-					<input type="text" class="form-control" name=question[solutionLink] id="solutionLink" placeholder="Enter the solution link" value="<%= solutionLink?solutionLink:"" %>"/>
+					<input type="url" class="form-control" name=question[solutionLink] id="solutionLink" placeholder="Enter the solution link" value="<%= solutionLink?solutionLink:"" %>"/>
 					<div class="valid-feedback">Looks good!</div>
+					<div class="invalid-feedback">Please enter a valid link.</div>
 				</div>
 				<div class="mb-3">
 					<label for="lastRevisionDate">Last revision date</label>
 					<input type="date" class="form-control" name=question[lastRevisionDate] id="lastRevisionDate" placeholder="Enter the last revision date" value="<%= lastRevisionDate?lastRevisionDate:"" %>"/>
 					<div class="valid-feedback">Looks good!</div>
+					<div class="invalid-feedback">Please enter a valid date.</div>
 				</div>
 				<div class="mb-3">
 					<label for="nextRevisionDate">Next revision date</label>
 					<input type="date" class="form-control" name=question[nextRevisionDate] id="nextRevisionDate" placeholder="Enter the next revision date" value="<%= nextRevisionDate?nextRevisionDate:"" %>"/>
 					<div class="valid-feedback">Looks good!</div>
+					<div class="invalid-feedback">Please enter a valid date.</div>
 				</div>
 				<div class="mb-3">
 					<label for="revisionCount">Revision count</label>
 					<input type="number" class="form-control" name=question[revisionCount] id="revisionCount" placeholder="Enter the revision count" min="0" value="<%= revisionCount>=0?revisionCount:"" %>" />
 					<div class="valid-feedback">Looks good!</div>
+					<div class="invalid-feedback">Please enter a valid count.</div>
 				</div>
 				<button class="btn btn-success">Submit</button>
 			</div>

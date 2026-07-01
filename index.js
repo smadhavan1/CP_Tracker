@@ -9,6 +9,8 @@ import tagList from "./constants/tags.js";
 import difficultyLevels from "./constants/difficultyLevels.js";
 import platforms from "./constants/platforms.js";
 import statusOptions from "./constants/statusOptions.js";
+import AppError from "./helpers/AppError.js";
+import validateQuestion from "./validators/question.js";
 
 mongoose
 	.connect("mongodb://127.0.0.1:27017/cp_tracker")
@@ -47,15 +49,12 @@ app.get("/questions", async (req, res) => {
 	res.render("questions/index", { questions });
 });
 
-app.post("/questions", async (req, res) => {
+app.post("/questions", validateQuestion, async (req, res) => {
 	let question = req.body.question;
 	if (question.favourite === "on") question.favourite = true;
 	else question.favourite = false;
 
 	if (question.status !== "Solved") question.solvedDate = "";
-
-	if (!question.link.startsWith("https://")) question.link = "https://" + question.link;
-	if (question.solutionLink && !question.solutionLink.startsWith("https://")) question.solutionLink = "https://" + question.solutionLink;
 
 	await Question.insertOne({ ...question });
 	res.redirect("/questions");
@@ -78,19 +77,16 @@ app.get("/questions/:id/edit", async (req, res) => {
 	res.render("questions/edit", { ...question, difficultyLevels, platforms, statusOptions, tagList });
 });
 
-app.patch("/questions/:id", async (req, res) => {
+app.patch("/questions/:id", validateQuestion, async (req, res) => {
 	const { id } = req.params;
 	let question = req.body.question;
 	if (question.favourite === "on") question.favourite = true;
 	else question.favourite = false;
 
-	if (!question.link.startsWith("https://")) question.link = "https://" + question.link;
-	if (question.solutionLink && !question.solutionLink.startsWith("https://")) question.solutionLink = "https://" + question.solutionLink;
-
 	if (question.status !== "Solved") question.solvedDate = "";
 	question.tags = question.tags || [];
 
-	await Question.findByIdAndUpdate(id, { ...question });
+	await Question.findByIdAndUpdate(id, { ...question }, { runValidators: true });
 	res.redirect(`/questions/${id}`);
 });
 
@@ -98,4 +94,14 @@ app.delete("/questions/:id", async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findByIdAndDelete(id);
 	res.redirect("/questions");
+});
+
+app.all("/{*path}", (req, res, next) => {
+	next(new AppError("Page not found.", 404));
+});
+
+app.use((err, req, res, next) => {
+	const { statusCode = 500 } = err;
+	if (!err.message) err.message = "An error occurred.";
+	res.status(statusCode).render("error", { err });
 });
