@@ -25,44 +25,44 @@
 				<div class="mb-3">
 					<label for="difficulty">Difficulty</label>
 					<select class="form-select" name=question[difficulty] id="difficulty" required>
-						<% for(let difficultyLevel of difficultyLevels){{ { }} %>
+						<% for(let difficultyLevel of difficultyLevels){ %>
 							<option value="<%= difficultyLevel %>" <%= difficulty===difficultyLevel?"selected":"" %>><%= difficultyLevel %></option>
-						<%{{ } }}%>
+						<%}%>
 					</select>
 					<div class="valid-feedback">Looks good!</div>
 				</div>
 				<div class="mb-3">
 					<label for="platform">Platform</label>
 					<select class="form-select" name=question[platform] id="platform" required>
-						<% for(let platformOption of platforms){{ { }} %>
+						<% for(let platformOption of platforms){ %>
 							<option value="<%= platformOption %>" <%= platform===platformOption?"selected":"" %>><%= platformOption %></option>
-						<%{{ } }}%>
+						<%}%>
 					</select>
 					<div class="valid-feedback">Looks good!</div>
 				</div>
 				<div class="mb-3">
 					<label for="status">Status</label>
 					<select class="form-select" name=question[status] id="status" required>
-						<% for(let statusOption of statusOptions){{ { }} %>
+						<% for(let statusOption of statusOptions){ %>
 							<option value="<%= statusOption %>" <%= status===statusOption?"selected":"" %>><%= statusOption %></option>
-						<%{{ } }}%>
+						<%}%>
 					</select>
 					<div class="valid-feedback">Looks good!</div>
 				</div>
 				<div class="mb-3 container">
 					<label for="tags">Tags</label>
 					<div class="row">
-						<% tagList.forEach((tag,idx) => {{ { }} %>
-							<% if(idx%14===0) {{ { }}%>
+						<% tagList.forEach((tag,idx) => { %>
+							<% if(idx%14===0) {%>
 								<div class="col">
-							<% {{ } }} %>
+							<% } %>
 							
 							<label><input type="checkbox" <%= tags.includes(tag)?"checked":"" %> name="question[tags]" value="<%= tag %>" /> <%= tag %></label><br />
 							
-							<% if((idx+1)%14===0) {{ { }}%>
+							<% if((idx+1)%14===0) {%>
 								</div>
-							<% {{ } }} %>
-						<% {{ } }}) %>
+							<% } %>
+						<% }) %>
 					</div>
 				</div>
 				<div class="mb-3">

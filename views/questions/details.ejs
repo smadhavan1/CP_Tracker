@@ -1,45 +1,45 @@
 <%- layout('layouts/boilerplate') %>
 <div class="mx-auto my-3 w-50">
-	<h1><%= ID %>. <%= title %> <% if(favourite) {{ { }} %> ⭐ <% {{ } }} else {{ { }} %> ☆ <% {{ } }} %></h1>
+	<h1><%= ID %>. <%= title %> <% if(favourite) { %> ⭐ <% } else { %> ☆ <% } %></h1>
 	<section id="question">
 		<span class="me-2"><%= difficulty %></span>
 		<span class="me-2"><%= platform %></span>
 		<a href="<%= link %>">Question Link</a>
-		<% if(tags && tags.length) {{ { }} %>
+		<% if(tags && tags.length) { %>
 		<div>
-			Tags : <% tags.forEach((tag)=>{{ { }} %>
+			Tags : <% tags.forEach((tag)=>{ %>
 			<span class="me-1"><%= tag %></span>
-			<% {{ } }}) %>
+			<% }) %>
 		</div>
-		<% {{ } }} else {{ { }} %>
+		<% } else { %>
 		<div>
 			No tags
 		</div>
-		<% {{ } }} %>
+		<% } %>
 	</section>
 	<hr />
 	<section id="solution">
 		<span class="me-2">Status : <%= status %></span>
-		<% if(solvedDate) {{ { }}%>
+		<% if(solvedDate) {%>
 		<p>Solved on <%= solvedDate %></p>
-		<% {{ } }} %> <% if(timeTaken) {{ { }}%>
+		<% } %> <% if(timeTaken) {%>
 		<p>Time taken : <%= timeTaken %> minutes</p>
-		<% {{ } }} %> <% if(notes) {{ { }}%>
+		<% } %> <% if(notes) {%>
 		<p>Notes: <%= notes %></p>
-		<% {{ } }} %> <% if(solutionLink) {{ { }} %>
+		<% } %> <% if(solutionLink) { %>
 		<a href="<%= solutionLink %>">Solution Link</a>
-		<% {{ } }} %>
+		<% } %>
 	</section>
 	<hr />
 
 	<section id="revision">
-		<% if(lastRevisionDate) {{ { }}%>
+		<% if(lastRevisionDate) {%>
 		<p>Last Revision Date: <%= lastRevisionDate %></p>
-		<% {{ } }} %> <% if(nextRevisionDate) {{ { }}%>
+		<% } %> <% if(nextRevisionDate) {%>
 		<p>Next Revision Date: <%= nextRevisionDate %></p>
-		<% {{ } }} %> <% if(revisionCount>=0) {{ { }}%>
+		<% } %> <% if(revisionCount>=0) {%>
 		<p>Revision Count: <%= revisionCount %></p>
-		<% {{ } }} %>
+		<% } %>
 	</section>
 	<hr />
 	<a href="/questions/<%= _id %>/edit" class="btn btn-warning">Edit</a>

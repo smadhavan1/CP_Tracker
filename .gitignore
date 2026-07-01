@@ -4,3 +4,4 @@ internal/
 .vscode
 .vercel
 .vercelignore
+.prettierignore
