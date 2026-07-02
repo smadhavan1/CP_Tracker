@@ -4,6 +4,9 @@ import ejsMate from "ejs-mate";
 import Question from "./models/question.js";
 import mongoose from "mongoose";
 import methodOverride from "method-override";
+import session from "express-session";
+import Toastify from "toastify-js";
+import cookieParser from "cookie-parser";
 
 import tagList from "./constants/tags.js";
 import difficultyLevels from "./constants/difficultyLevels.js";
@@ -31,10 +34,40 @@ app.set("views", path.join(__dirname, "/views"));
 
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+const config = {
+	name: "CPTrackerSessionID",
+	secret: process.env.SESSION_SECRET,
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		httpOnly: true,
+		maxAge: 1000 * 60 * 60 * 24 * 7
+	}
+};
+app.use(session(config));
 
 app.listen(3000, () => {
 	console.log("Listening on port 3000!");
 });
+
+app.use((req, res, next) => {
+	const ToastMessage = req.cookies?.ToastMessage || null;
+	const ToastType = req.cookies?.ToastType || null;
+
+	res.locals.ToastMessage = ToastMessage;
+	res.locals.ToastType = ToastType;
+
+	if (ToastMessage && ToastType) {
+		res.clearCookie("ToastMessage");
+		res.clearCookie("ToastType");
+	}
+
+	next();
+});
+
+const toastCookieConfig = { maxAge: 10000, httpOnly: true };
 
 app.get("/", (req, res) => {
 	res.render("home");
@@ -57,18 +90,31 @@ app.post("/questions", validateQuestion, async (req, res) => {
 	if (question.status !== "Solved") question.solvedDate = "";
 
 	await Question.insertOne({ ...question });
+	res.cookie("ToastMessage", "Successfully added the question!", toastCookieConfig);
+	res.cookie("ToastType", "success", toastCookieConfig);
 	res.redirect("/questions");
 });
 
 app.get("/questions/:id", async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findById(id).lean();
+	if (!question) {
+		res.cookie("ToastMessage", "Cannot find the question!", toastCookieConfig);
+		res.cookie("ToastType", "error", toastCookieConfig);
+		return res.redirect("/questions");
+	}
 	res.render("questions/details", { ...question });
 });
 
 app.get("/questions/:id/edit", async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findById(id).lean();
+
+	if (!question) {
+		res.cookie("ToastMessage", "Cannot find the question!", toastCookieConfig);
+		res.cookie("ToastType", "error", toastCookieConfig);
+		return res.redirect("/questions");
+	}
 
 	question.solvedDate = question.solvedDate ? question.solvedDate.toISOString().split("T")[0] : null;
 	question.lastRevisionDate = question.lastRevisionDate ? question.lastRevisionDate.toISOString().split("T")[0] : null;
@@ -87,12 +133,16 @@ app.patch("/questions/:id", validateQuestion, async (req, res) => {
 	question.tags = question.tags || [];
 
 	await Question.findByIdAndUpdate(id, { ...question }, { runValidators: true });
+	res.cookie("ToastMessage", "Successfully updated the question!", toastCookieConfig);
+	res.cookie("ToastType", "success", toastCookieConfig);
 	res.redirect(`/questions/${id}`);
 });
 
 app.delete("/questions/:id", async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findByIdAndDelete(id);
+	res.cookie("ToastMessage", "Successfully deleted the question!", toastCookieConfig);
+	res.cookie("ToastType", "success", toastCookieConfig);
 	res.redirect("/questions");
 });
 
