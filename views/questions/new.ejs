@@ -57,7 +57,7 @@
 								<div class="col">
 							<% } %>
 
-							<label><input type="checkbox" name="question[tags]" value="<%= tag %>" /> <%= tag %></label><br />
+							<label><input type="checkbox" name="question[tags][]" value="<%= tag %>" /> <%= tag %></label><br />
 
 							<% if((idx+1)%14===0) {%>
 								</div>

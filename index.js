@@ -16,11 +16,10 @@ import statusOptions from "./constants/statusOptions.js";
 import sessionCookieConfig from "./config/sessionCookie.js";
 import toastCookieConfig from "./config/toastCookie.js";
 import AppError from "./helpers/AppError.js";
-import validateQuestion from "./validators/question.js";
 import Question from "./models/question.js";
 import User from "./models/user.js";
 
-import { isLoggedIn } from "./middleware.js";
+import { validateQuestion, isLoggedIn, isOwner } from "./middleware.js";
 
 mongoose
 	.connect("mongodb://127.0.0.1:27017/cp_tracker")
@@ -81,7 +80,7 @@ app.get("/questions/new", isLoggedIn, (req, res) => {
 });
 
 app.get("/questions", isLoggedIn, async (req, res) => {
-	const questions = await Question.find({});
+	const questions = await Question.find({ owner: req.user?._id });
 	res.render("questions/index", { questions });
 });
 
@@ -92,13 +91,15 @@ app.post("/questions", isLoggedIn, validateQuestion, async (req, res) => {
 
 	if (question.status !== "Solved") question.solvedDate = "";
 
+	question.owner = req.user;
+
 	await Question.insertOne({ ...question });
 	res.cookie("ToastMessage", "Successfully added the question!", toastCookieConfig);
 	res.cookie("ToastType", "success", toastCookieConfig);
 	res.redirect("/questions");
 });
 
-app.get("/questions/:id", isLoggedIn, async (req, res) => {
+app.get("/questions/:id", isLoggedIn, isOwner, async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findById(id).lean();
 	if (!question) {
@@ -109,7 +110,7 @@ app.get("/questions/:id", isLoggedIn, async (req, res) => {
 	res.render("questions/details", { ...question });
 });
 
-app.get("/questions/:id/edit", isLoggedIn, async (req, res) => {
+app.get("/questions/:id/edit", isLoggedIn, isOwner, async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findById(id).lean();
 
@@ -126,7 +127,7 @@ app.get("/questions/:id/edit", isLoggedIn, async (req, res) => {
 	res.render("questions/edit", { ...question, difficultyLevels, platforms, statusOptions, tagList });
 });
 
-app.patch("/questions/:id", isLoggedIn, validateQuestion, async (req, res) => {
+app.patch("/questions/:id", isLoggedIn, isOwner, validateQuestion, async (req, res) => {
 	const { id } = req.params;
 	let question = req.body.question;
 	if (question.favourite === "on") question.favourite = true;
@@ -141,7 +142,7 @@ app.patch("/questions/:id", isLoggedIn, validateQuestion, async (req, res) => {
 	res.redirect(`/questions/${id}`);
 });
 
-app.delete("/questions/:id", isLoggedIn, async (req, res) => {
+app.delete("/questions/:id", isLoggedIn, isOwner, async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findByIdAndDelete(id);
 	res.cookie("ToastMessage", "Successfully deleted the question!", toastCookieConfig);
@@ -201,6 +202,11 @@ app.post("/login", passport.authenticate("local", { failureMessage: "Invalid use
 });
 
 app.get("/logout", (req, res) => {
+	if (!req.isAuthenticated()) {
+		res.cookie("ToastMessage", "You are not logged in!", toastCookieConfig);
+		res.cookie("ToastType", "info", toastCookieConfig);
+		return res.redirect("/login");
+	}
 	req.logout(function (error) {
 		if (error) return next(error);
 		res.cookie("ToastMessage", "Goodbye!", toastCookieConfig);
