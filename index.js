@@ -35,6 +35,7 @@ app.set("views", path.join(__dirname, "/views"));
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "/public")));
 
 const config = {
 	name: "CPTrackerSessionID",
@@ -133,7 +134,7 @@ app.patch("/questions/:id", validateQuestion, async (req, res) => {
 	question.tags = question.tags || [];
 
 	await Question.findByIdAndUpdate(id, { ...question }, { runValidators: true });
-	res.cookie("ToastMessage", "Successfully updated the question!", toastCookieConfig);
+	res.cookie("ToastMessage", "Successfully edited the question!", toastCookieConfig);
 	res.cookie("ToastType", "success", toastCookieConfig);
 	res.redirect(`/questions/${id}`);
 });
