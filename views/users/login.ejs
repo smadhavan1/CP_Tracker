@@ -1,0 +1,25 @@
+<%- layout('layouts/boilerplate') %>
+<div class="my-3 container">
+	<h1 class="text-center mb-5">Login</h1>
+	<div class="col-md-4 mx-auto">
+		<form action="/login" method="post">
+			<div class="container">
+				<div class="form-floating mb-3">
+					<input type="email" class="form-control" name="email" id="email" placeholder="" required />
+					<label for="email">Email</label>
+					<div class="valid-feedback">Looks good!</div>
+					<div class="invalid-feedback">Please enter a valid email.</div>
+				</div>
+				<div class="form-floating mb-4">
+					<input type="password" class="form-control" name="password" id="password" placeholder="" required />
+					<label for="password">Password</label>
+					<div class="valid-feedback">Looks good!</div>
+					<div class="invalid-feedback">Please enter a valid password.</div>
+				</div>
+				<div class="d-grid">
+					<button class="btn btn-success">Login</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

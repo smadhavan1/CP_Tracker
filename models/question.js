@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import difficultyLevels from "../constants/difficultyLevels.js";
+import platforms from "../constants/platforms.js";
+import statusOptions from "../constants/statusOptions.js";
 import tagList from "../constants/tags.js";
 
 const questionSchema = new mongoose.Schema(
@@ -17,17 +20,17 @@ const questionSchema = new mongoose.Schema(
 		},
 		difficulty: {
 			type: String,
-			enum: ["Easy", "Medium", "Hard"],
+			enum: difficultyLevels,
 			required: true
 		},
 		platform: {
 			type: String,
-			enum: ["Codeforces", "CodeChef", "LeetCode", "AtCoder", "HackerRank", "CSES", "Other"],
+			enum: platforms,
 			required: true
 		},
 		status: {
 			type: String,
-			enum: ["Solved", "Attempted,", "Not Started"],
+			enum: statusOptions,
 			required: true
 		},
 		tags: {

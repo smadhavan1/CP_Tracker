@@ -1,19 +1,26 @@
 import express from "express";
 import path from "node:path";
 import ejsMate from "ejs-mate";
-import Question from "./models/question.js";
 import mongoose from "mongoose";
 import methodOverride from "method-override";
 import session from "express-session";
 import Toastify from "toastify-js";
 import cookieParser from "cookie-parser";
+import passport from "passport";
+import LocalStrategy from "passport-local";
 
 import tagList from "./constants/tags.js";
 import difficultyLevels from "./constants/difficultyLevels.js";
 import platforms from "./constants/platforms.js";
 import statusOptions from "./constants/statusOptions.js";
+import sessionCookieConfig from "./config/sessionCookie.js";
+import toastCookieConfig from "./config/toastCookie.js";
 import AppError from "./helpers/AppError.js";
 import validateQuestion from "./validators/question.js";
+import Question from "./models/question.js";
+import User from "./models/user.js";
+
+import { isLoggedIn } from "./middleware.js";
 
 mongoose
 	.connect("mongodb://127.0.0.1:27017/cp_tracker")
@@ -37,23 +44,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
 
-const config = {
-	name: "CPTrackerSessionID",
-	secret: process.env.SESSION_SECRET,
-	resave: false,
-	saveUninitialized: false,
-	cookie: {
-		httpOnly: true,
-		maxAge: 1000 * 60 * 60 * 24 * 7
-	}
-};
-app.use(session(config));
+app.use(session(sessionCookieConfig));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy({ usernameField: "email" }, User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.listen(3000, () => {
 	console.log("Listening on port 3000!");
 });
 
 app.use((req, res, next) => {
+	res.locals.currentUser = req.user;
 	const ToastMessage = req.cookies?.ToastMessage || null;
 	const ToastType = req.cookies?.ToastType || null;
 
@@ -68,22 +72,20 @@ app.use((req, res, next) => {
 	next();
 });
 
-const toastCookieConfig = { maxAge: 10000, httpOnly: true };
-
 app.get("/", (req, res) => {
 	res.render("home");
 });
 
-app.get("/questions/new", (req, res) => {
+app.get("/questions/new", isLoggedIn, (req, res) => {
 	res.render("questions/new", { difficultyLevels, platforms, statusOptions, tagList });
 });
 
-app.get("/questions", async (req, res) => {
+app.get("/questions", isLoggedIn, async (req, res) => {
 	const questions = await Question.find({});
 	res.render("questions/index", { questions });
 });
 
-app.post("/questions", validateQuestion, async (req, res) => {
+app.post("/questions", isLoggedIn, validateQuestion, async (req, res) => {
 	let question = req.body.question;
 	if (question.favourite === "on") question.favourite = true;
 	else question.favourite = false;
@@ -96,7 +98,7 @@ app.post("/questions", validateQuestion, async (req, res) => {
 	res.redirect("/questions");
 });
 
-app.get("/questions/:id", async (req, res) => {
+app.get("/questions/:id", isLoggedIn, async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findById(id).lean();
 	if (!question) {
@@ -107,7 +109,7 @@ app.get("/questions/:id", async (req, res) => {
 	res.render("questions/details", { ...question });
 });
 
-app.get("/questions/:id/edit", async (req, res) => {
+app.get("/questions/:id/edit", isLoggedIn, async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findById(id).lean();
 
@@ -124,7 +126,7 @@ app.get("/questions/:id/edit", async (req, res) => {
 	res.render("questions/edit", { ...question, difficultyLevels, platforms, statusOptions, tagList });
 });
 
-app.patch("/questions/:id", validateQuestion, async (req, res) => {
+app.patch("/questions/:id", isLoggedIn, validateQuestion, async (req, res) => {
 	const { id } = req.params;
 	let question = req.body.question;
 	if (question.favourite === "on") question.favourite = true;
@@ -139,12 +141,72 @@ app.patch("/questions/:id", validateQuestion, async (req, res) => {
 	res.redirect(`/questions/${id}`);
 });
 
-app.delete("/questions/:id", async (req, res) => {
+app.delete("/questions/:id", isLoggedIn, async (req, res) => {
 	const { id } = req.params;
 	const question = await Question.findByIdAndDelete(id);
 	res.cookie("ToastMessage", "Successfully deleted the question!", toastCookieConfig);
 	res.cookie("ToastType", "success", toastCookieConfig);
 	res.redirect("/questions");
+});
+
+app.get("/register", (req, res) => {
+	if (req.isAuthenticated()) {
+		res.cookie("ToastMessage", "You are already logged in!", toastCookieConfig);
+		res.cookie("ToastType", "info", toastCookieConfig);
+		return res.redirect("/");
+	}
+	res.render("users/register");
+});
+
+app.post("/register", async (req, res) => {
+	try {
+		const { email, password } = req.body;
+		const user = new User({ email });
+		const registeredUser = await User.register(user, password);
+		req.login(registeredUser, (error) => {
+			if (error) return next(error);
+			res.cookie("ToastMessage", "Welcome to CP Tracker!", toastCookieConfig);
+			res.cookie("ToastType", "success", toastCookieConfig);
+			res.redirect("/questions");
+		});
+	} catch (error) {
+		res.cookie("ToastMessage", `${error.message}`, toastCookieConfig);
+		res.cookie("ToastType", "error", toastCookieConfig);
+		res.redirect("register");
+	}
+});
+
+app.get("/login", (req, res, next) => {
+	if (req.isAuthenticated()) {
+		res.cookie("ToastMessage", "You are already logged in!", toastCookieConfig);
+		res.cookie("ToastType", "info", toastCookieConfig);
+		return res.redirect("/");
+	}
+	if (req.session?.messages) {
+		const messages = req.session.messages.map((message) => message).join(",");
+		res.cookie("ToastMessage", `${messages}`, toastCookieConfig);
+		res.cookie("ToastType", "failure", toastCookieConfig);
+		req.session.messages = null;
+		return res.redirect("/login");
+	}
+	res.render("users/login");
+});
+
+app.post("/login", passport.authenticate("local", { failureMessage: "Invalid username or password!", failureRedirect: "/login" }), (req, res) => {
+	const redirectURL = req.session.returnTo || "/";
+	delete req.session.returnTo;
+	res.cookie("ToastMessage", "Welcome back!", toastCookieConfig);
+	res.cookie("ToastType", "success", toastCookieConfig);
+	res.redirect(redirectURL);
+});
+
+app.get("/logout", (req, res) => {
+	req.logout(function (error) {
+		if (error) return next(error);
+		res.cookie("ToastMessage", "Goodbye!", toastCookieConfig);
+		res.cookie("ToastType", "success", toastCookieConfig);
+		res.redirect("/login");
+	});
 });
 
 app.all("/{*path}", (req, res, next) => {
