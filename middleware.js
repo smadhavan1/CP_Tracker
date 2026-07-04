@@ -1,9 +1,14 @@
 import { questionSchemaJoi } from "./schemas.js";
 import AppError from "./helpers/AppError.js";
-import toastCookieConfig from "./config/toastCookie.js";
+import setToastAndRedirect from "./helpers/setToast.js";
 import Question from "./models/question.js";
 
 const validateQuestion = (req, res, next) => {
+	if (req.body.question.favourite === "on") req.body.question.favourite = true;
+	else req.body.question.favourite = false;
+
+	if (req.body.question.status !== "Solved") req.body.question.solvedDate = "";
+
 	const { error } = questionSchemaJoi.validate(req.body);
 	if (!req.body) {
 		throw new AppError("Request is empty.", 400);
@@ -18,9 +23,7 @@ const validateQuestion = (req, res, next) => {
 const isLoggedIn = (req, res, next) => {
 	if (!req.isAuthenticated()) {
 		req.session.returnTo = req.originalUrl;
-		res.cookie("ToastMessage", "You must be signed in first!", toastCookieConfig);
-		res.cookie("ToastType", "error", toastCookieConfig);
-		return res.redirect("/login");
+		return setToastAndRedirect(res, "You must be signed in first!", "error", "/login");
 	}
 	next();
 };
@@ -29,10 +32,12 @@ const isOwner = async (req, res, next) => {
 	const { id } = req.params;
 	const question = await Question.findById(id);
 
+	if (!question) {
+		return setToastAndRedirect(res, "Cannot find the question!", "error", "/questions");
+	}
+
 	if (!question.owner.equals(req.user._id)) {
-		res.cookie("ToastMessage", "You are not allowed to do that!", toastCookieConfig);
-		res.cookie("ToastType", "error", toastCookieConfig);
-		return res.redirect("/");
+		return setToastAndRedirect(res, "You are not allowed to do that!", "error", "/");
 	}
 	next();
 };
