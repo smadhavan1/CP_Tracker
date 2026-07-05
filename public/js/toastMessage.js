@@ -1,13 +1,13 @@
 if (ToastMessage && ToastMessage !== "null" && ToastMessage.length > 0) {
 	switch (ToastType) {
 		case "success":
-			background = "green";
+			background = "#198754";
 			break;
 		case "error":
-			background = "red";
+			background = "#DC3545";
 			break;
 		case "info":
-			background = "#2196F3";
+			background = "#0AAECF";
 			break;
 	}
 
