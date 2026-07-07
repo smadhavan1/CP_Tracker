@@ -49,20 +49,18 @@
 					</select>
 					<div class="valid-feedback">Looks good!</div>
 				</div>
-				<div class="mb-3 container">
-					<label for="tags">Tags</label>
-					<div class="row">
-						<% tagList.forEach((tag,idx) => { %>
-							<% if(idx%14===0) {%>
-								<div class="col">
-							<% } %>
-							
-							<label><input type="checkbox" <%= tags.includes(tag)?"checked":"" %> name="question[tags][]" value="<%= tag %>" /> <%= tag %></label><br />
-							
-							<% if((idx+1)%14===0) {%>
-								</div>
-							<% } %>
-						<% }) %>
+				<div>
+				<label for="tags">Tags</label>
+					<div class="overflow-y-auto mb-3 border border-secondary-subtle rounded p-1" style="max-height: 120px;">
+						<% for(let tag of tagList) { %>
+							<% const isChecked = tags && tags.includes(tag); %>
+							<div class="d-inline-block m-1">
+								<label class="btn rounded-pill btn-sm <%= isChecked ? 'btn-primary' : 'btn-light' %>" onchange="this.classList.toggle('btn-primary'); this.classList.toggle('btn-light');">
+									<input type="checkbox" class="btn-check" name="question[tags][]" value="<%= tag %>" <%= isChecked ? 'checked' : '' %>>
+									<%= tag %>
+								</label>
+							</div>
+						<% } %>
 					</div>
 				</div>
 				<div class="mb-3">

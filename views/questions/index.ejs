@@ -1,24 +1,82 @@
 <%- layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <h1 class="text-center">Questions</h1>
 <div class="my-3 container">
-		<% for(let question of questions){ %>
-			<div class="card mb-3 w-50 mx-auto">
-				<h5 class="card-header"><%= question.platform %> #<%= question.ID %></h5>
-				<div class="card-body">
-					<h5 class="card-title"><%= question.title %> (<%= question.difficulty %>)</h5>
-					<p><%= question.status %></p>
-					<a href="/questions/<%= question._id %>" class="btn btn-primary">Details</a>
-					<a href="<%= question.link %>" class="btn btn-primary"><%= question.platform %></a>
+	<form action="/questions">
+		<fieldset class="w-50 mx-auto border border-secondary rounded px-3 mb-3">
+			<legend class="float-none w-auto px-2 fs-6">Filters</legend>
+			<div class="mb-3">
+				<label for="title">Title</label>
+				<input type="text" id="title" name="title" class="form-control" placeholder="Type here to search" value="<%= display.title?display.title:'' %>">
+			</div>
+			<div class="row g-3 mb-3">
+				<div class="col-md-4">
+					<label for="difficulty">Difficulty</label>
+					<select class="form-select" name="difficulty" id="difficulty">
+						<option value="">Any</option>
+						<% for(let difficultyLevel of difficultyLevels){ %>
+							<option value="<%= difficultyLevel %>" <%= display.difficulty===difficultyLevel?"selected":"" %>><%= difficultyLevel %></option>
+						<%}%>
+					</select>
 				</div>
-				<div class="card-footer">
-					<% if(question.tags && question.tags.length) { %>
-						<% question.tags.forEach(tag => { %>
-							<span class="badge rounded-pill text-bg-secondary"><%= tag %></span> 
-						<% }); %>
-					<% } else {%>
-						<span>No tags</span>
+				<div class="col-md-4">
+					<label for="platform">Platform</label>
+					<select class="form-select" name="platform" id="platform">
+						<option value="">Any</option>
+						<% for(let platformOption of platforms){ %>
+							<option value="<%= platformOption %>" <%= display.platform===platformOption?"selected":"" %>><%= platformOption %></option>
+						<%}%>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label for="status">Status</label>
+					<select class="form-select" name="status" id="status">
+						<option value="">Any</option>
+						<% for(let statusOption of statusOptions){ %>
+							<option value="<%= statusOption %>" <%= display.status===statusOption?"selected":"" %>><%= statusOption %></option>
+						<%}%>
+					</select>
+				</div>
+			</div>
+			<div>
+				<label for="tags">Tags</label>
+				<div class="overflow-y-auto mb-3 border border-secondary-subtle rounded p-1" style="max-height: 120px;">
+					<% for(let tag of tagList) { %>
+						<% const isChecked = display.tags && display.tags.includes(tag); %>
+						<div class="d-inline-block m-1">
+							<label class="btn rounded-pill btn-sm <%= isChecked ? 'btn-primary' : 'btn-light' %>" onchange="this.classList.toggle('btn-primary'); this.classList.toggle('btn-light');">
+								<input type="checkbox" class="btn-check" name="tags" value="<%= tag %>" <%= isChecked ? 'checked' : '' %>>
+								<%= tag %>
+							</label>
+						</div>
 					<% } %>
 				</div>
 			</div>
-		<% } %>
+			<div class="d-grid d-md-block">
+				<button class="mb-3 btn btn-success">Submit</button>
+			</div>
+		</fieldset>
+	</form>
+	<% for(let question of questions){ %>
+		<div class="card mb-3 w-50 mx-auto">
+			<h5 class="card-header"><%= question.platform %> #<%= question.ID %></h5>
+			<div class="card-body">
+				<h5 class="card-title"><%= question.title %> (<%= question.difficulty %>)</h5>
+				<p><%= question.status %></p>
+				<div class="d-flex gap-2">
+					<a href="/questions/<%= question._id %>" class="btn btn-primary">Details</a>
+					<a href="<%= question.link %>" class="d-inline-flex btn btn-primary" target="_blank"><%= question.platform %><i class="bi bi-box-arrow-up-right small ms-1"></i></a>
+				</div>
+			</div>
+			<div class="card-footer">
+				<% if(question.tags && question.tags.length) { %>
+					<% question.tags.forEach(tag => { %>
+						<span class="badge rounded-pill text-bg-secondary"><%= tag %></span> 
+					<% }); %>
+				<% } else {%>
+					<span>No tags</span>
+				<% } %>
+			</div>
+		</div>
+	<% } %>
 </div>

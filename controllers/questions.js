@@ -10,8 +10,30 @@ const newForm = (req, res) => {
 };
 
 const index = async (req, res) => {
+<<<<<<< HEAD
 	const questions = await Question.find({ owner: req.user?._id });
 	res.render("questions/index", { questions });
+=======
+	const DBQuery = { owner: req.user?._id };
+	const title = req.query.title;
+	const difficulty = req.query.difficulty;
+	const platform = req.query.platform;
+	const status = req.query.status;
+	const tags = req.query.tags;
+	const DBQueryTags = tags ? (Array.isArray(tags) ? tags : [tags]) : [];
+
+	if (title) DBQuery.title = new RegExp(title, "i");
+	if (difficulty) DBQuery.difficulty = difficulty;
+	if (platform) DBQuery.platform = platform;
+	if (status) DBQuery.status = status;
+	if (tags) DBQuery.tags = { $in: [...DBQueryTags] };
+
+	const questions = await Question.find(DBQuery);
+	const display = { ...DBQuery };
+	display.title = req.query.title;
+	display.tags = req.query.tags;
+	res.render("questions/index", { questions, difficultyLevels, platforms, statusOptions, tagList, display });
+>>>>>>> 478d5ae (Implement search and filter functionality)
 };
 
 const addQuestion = async (req, res) => {
