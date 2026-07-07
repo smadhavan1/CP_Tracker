@@ -10,10 +10,6 @@ const newForm = (req, res) => {
 };
 
 const index = async (req, res) => {
-<<<<<<< HEAD
-	const questions = await Question.find({ owner: req.user?._id });
-	res.render("questions/index", { questions });
-=======
 	const DBQuery = { owner: req.user?._id };
 	const title = req.query.title;
 	const difficulty = req.query.difficulty;
@@ -33,7 +29,6 @@ const index = async (req, res) => {
 	display.title = req.query.title;
 	display.tags = req.query.tags;
 	res.render("questions/index", { questions, difficultyLevels, platforms, statusOptions, tagList, display });
->>>>>>> 478d5ae (Implement search and filter functionality)
 };
 
 const addQuestion = async (req, res) => {
