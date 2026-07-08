@@ -1,4 +1,5 @@
 <%- layout('layouts/boilerplate') %>
+<% const dateFormatter = new Intl.DateTimeFormat("en-GB", {dateStyle: "full"});%>
 <div class="mx-auto my-3 w-50">
 	<h1><%= ID %>. <%= title %> <% if(favourite) { %> ⭐ <% } else { %> ☆ <% } %></h1>
 	<section id="question">
@@ -21,7 +22,7 @@
 	<section id="solution">
 		<span class="me-2">Status : <%= status %></span>
 		<% if(solvedDate) {%>
-		<p>Solved on <%= solvedDate %></p>
+		<p>Solved on : <%= dateFormatter.format(solvedDate) %></p>
 		<% } %> <% if(timeTaken) {%>
 		<p>Time taken : <%= timeTaken %> minutes</p>
 		<% } %> <% if(notes) {%>
@@ -34,9 +35,9 @@
 
 	<section id="revision">
 		<% if(lastRevisionDate) {%>
-		<p>Last Revision Date: <%= lastRevisionDate %></p>
+		<p>Last Revision Date: <%= dateFormatter.format(lastRevisionDate) %></p>
 		<% } %> <% if(nextRevisionDate) {%>
-		<p>Next Revision Date: <%= nextRevisionDate %></p>
+		<p>Next Revision Date: <%= dateFormatter.format(nextRevisionDate) %></p>
 		<% } %> <% if(revisionCount>=0) {%>
 		<p>Revision Count: <%= revisionCount %></p>
 		<% } %>
@@ -47,5 +48,10 @@
 		<form class="d-inline" action="/questions/<%= _id %>?_method=delete" method="post">
 			<button class="btn btn-danger">Delete</button>
 		</form>
+	</div>
+	<hr>
+	<div class="text-muted small">
+		<p class="mb-1">Created: <%= dateFormatter.format(createdAt) %></p>
+		<p>Updated: <%= dateFormatter.format(updatedAt) %></p>
 	</div>
 </div>
