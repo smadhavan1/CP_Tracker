@@ -52,6 +52,17 @@
 					<% } %>
 				</div>
 			</div>
+			<div class="mb-3">
+				<label for="sortBy">Sort by</label>
+				<select class="form-select" name="sortBy" id="sortBy">
+					<option value="title_asc" <%= display.sortBy==="title_asc"?"selected":"" %>>Title (A to Z)</option>
+					<option value="title_dsc" <%= display.sortBy==="title_dsc"?"selected":"" %>>Title (Z to A)</option>
+					<option value="diff_asc" <%= display.sortBy==="diff_asc"?"selected":"" %>>Difficulty (Easy to Hard)</option>
+					<option value="diff_dsc" <%= display.sortBy==="diff_dsc"?"selected":"" %>>Difficulty (Hard to Easy)</option>
+					<option value="date_added_asc" <%= display.sortBy==="date_added_asc"?"selected":"" %>>Date Added (Oldest to Newest)</option>
+					<option value="date_added_dsc" <%= display.sortBy==="date_added_dsc"?"selected":"" %>>Date Added (Newest to Oldest)</option>
+				</select>
+			</div>
 			<div class="d-grid d-md-block">
 				<button class="mb-3 btn btn-success">Submit</button>
 			</div>

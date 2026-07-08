@@ -17,6 +17,8 @@ const index = async (req, res) => {
 	const status = req.query.status;
 	const tags = req.query.tags;
 	const DBQueryTags = tags ? (Array.isArray(tags) ? tags : [tags]) : [];
+	const sortBy = req.query.sortBy;
+	const options = {};
 
 	if (title) DBQuery.title = new RegExp(title, "i");
 	if (difficulty) DBQuery.difficulty = difficulty;
@@ -24,10 +26,27 @@ const index = async (req, res) => {
 	if (status) DBQuery.status = status;
 	if (tags) DBQuery.tags = { $in: [...DBQueryTags] };
 
-	const questions = await Question.find(DBQuery);
+	const aggregationPipeline = [{ $match: DBQuery }];
+
+	if (sortBy) {
+		if (sortBy === "diff_asc" || sortBy === "diff_dsc") {
+			aggregationPipeline.push({ $addFields: { __order: { $indexOfArray: [difficultyLevels, "$difficulty"] } } });
+			if (sortBy === "diff_asc") aggregationPipeline.push({ $sort: { __order: 1 } });
+			else aggregationPipeline.push({ $sort: { __order: -1 } });
+		} else {
+			if (sortBy === "title_asc") options.sort = { title: 1 };
+			else if (sortBy === "title_dsc") options.sort = { title: -1 };
+			else if (sortBy === "date_added_asc") options.sort = { createdAt: 1 };
+			else if (sortBy === "date_added_dsc") options.sort = { createdAt: -1 };
+			aggregationPipeline.push({ $sort: options.sort });
+		}
+	}
+
+	const questions = await Question.aggregate(aggregationPipeline);
 	const display = { ...DBQuery };
 	display.title = req.query.title;
 	display.tags = req.query.tags;
+	display.sortBy = req.query.sortBy;
 	res.render("questions/index", { questions, difficultyLevels, platforms, statusOptions, tagList, display });
 };
 
