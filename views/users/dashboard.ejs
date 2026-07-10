@@ -1,0 +1,18 @@
+<%- layout('layouts/boilerplate') %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<h1 class="text-center">Dashboard</h1>
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+        <h6 class="card-title fw-semibold text-center mb-3">Difficulty Distribution</h6>
+        <div class="d-flex justify-content-center">
+            <div>
+                <canvas id="difficultyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="difficulty"><canvas id="difficultyChart"></canvas></div>
+<script>
+    const difficultyConfig = <%- JSON.stringify(difficultyConfig) %>;
+    new Chart(document.getElementById('difficultyChart'),difficultyConfig);
+</script>

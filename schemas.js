@@ -4,8 +4,8 @@ import platforms from "./constants/platforms.js";
 import statusOptions from "./constants/statusOptions.js";
 import tagList from "./constants/tags.js";
 
-const currentTime = new Date(Date.now());
-currentTime.setHours(0, 0, 0);
+const startOfDay = new Date(Date.now()).setHours(0, 0, 0);
+const endOfDay = new Date(Date.now()).setHours(23, 59, 59);
 
 const questionSchemaJoi = Joi.object({
 	question: Joi.object({
@@ -22,13 +22,13 @@ const questionSchemaJoi = Joi.object({
 			.valid(...statusOptions)
 			.required(),
 		tags: Joi.array().items(Joi.string().valid(...tagList)),
-		solvedDate: Joi.date().max(currentTime).allow("").optional(),
+		solvedDate: Joi.date().max(endOfDay).allow("").optional(),
 		timeTaken: Joi.number().integer().min(0).allow("").optional(),
 		notes: Joi.string().allow("").optional(),
 		favourite: Joi.boolean(),
 		solutionLink: Joi.string().uri().allow("").optional(),
-		lastRevisionDate: Joi.date().max(currentTime).allow("").optional(),
-		nextRevisionDate: Joi.date().min(currentTime).allow("").optional(),
+		lastRevisionDate: Joi.date().max(endOfDay).allow("").optional(),
+		nextRevisionDate: Joi.date().min(startOfDay).allow("").optional(),
 		revisionCount: Joi.number().integer().min(0)
 	}).required()
 });
