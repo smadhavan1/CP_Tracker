@@ -116,8 +116,8 @@ const dashboard = async (req, res) => {
 				backgroundColor: "rgba(54, 162, 235, 0.2)",
 				borderColor: "rgb(54, 162, 235)",
 				borderWidth: 1,
-				categoryPercentage: 0.5,
-				barPercentage: 0.5,
+				categoryPercentage: 0.25,
+				barPercentage: 0.75,
 				hoverOffset: 4
 			}
 		]

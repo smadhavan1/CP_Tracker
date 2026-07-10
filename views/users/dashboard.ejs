@@ -1,28 +1,25 @@
 <%- layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/dashboard.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <h1 class="text-center">Dashboard</h1>
 
 <div class="row mt-4">
-    <div class="col">
+    <div class="col-12 col-md-6">
         <div class="card border-1 rounded-4 mb-5">
             <div class="card-body p-4">
                 <h6 class="card-title fw-semibold text-center mb-3">Difficulty Distribution</h6>
-                <div class="d-flex justify-content-center">
-                    <div>
-                        <canvas id="difficultyChart"></canvas>
-                    </div>
+                <div class="doughnut">
+                    <canvas id="difficultyChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col">
+    <div class="col-12 col-md-6">
         <div class="card border-1 rounded-4 mb-5">
             <div class="card-body p-4">
                 <h6 class="card-title fw-semibold text-center mb-3">Status Distribution</h6>
-                <div class="d-flex justify-content-center">
-                    <div>
-                        <canvas id="statusChart"></canvas>
-                    </div>
+                <div class="doughnut">
+                    <canvas id="statusChart"></canvas>
                 </div>
             </div>
         </div>
@@ -32,10 +29,8 @@
 <div class="card border-1 rounded-4 mb-5">
     <div class="card-body p-4">
         <h6 class="card-title fw-semibold text-center mb-3">Platform Distribution</h6>
-        <div class="d-flex justify-content-center">
-            <div>
-                <canvas id="platformChart"></canvas>
-            </div>
+        <div class="bar">
+            <canvas id="platformChart"></canvas>
         </div>
     </div>
 </div>
@@ -43,18 +38,11 @@
 <div class="card border-1 rounded-4">
     <div class="card-body p-4">
         <h6 class="card-title fw-semibold text-center mb-3">Topic Distribution</h6>
-        <div class="d-flex justify-content-center">
-            <div style="width:800px">
-                <canvas id="topicChart"></canvas>
-            </div>
+        <div class="bar">
+            <canvas id="topicChart"></canvas>
         </div>
     </div>
 </div>
-
-<div id="difficulty"><canvas id="difficultyChart"></canvas></div>
-<div id="status"><canvas id="statusChart"></canvas></div>
-<div id="platform"><canvas id="platformChart"></canvas></div>
-<div id="topic"><canvas id="topicChart"></canvas></div>
 
 <script>
     const difficultyConfig = <%- JSON.stringify(difficultyConfig) %>;
