@@ -42,4 +42,11 @@ const isOwner = async (req, res, next) => {
 	next();
 };
 
-export { validateQuestion, isLoggedIn, isOwner };
+const storeReturnTo = (req, res, next) => {
+	if (req.session.returnTo) {
+		res.locals.returnTo = req.session.returnTo;
+	}
+	next();
+};
+
+export { validateQuestion, isLoggedIn, isOwner, storeReturnTo };

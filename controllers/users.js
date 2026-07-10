@@ -38,7 +38,7 @@ const loginForm = (req, res, next) => {
 };
 
 const login = (req, res) => {
-	const redirectURL = req.session.returnTo || "/dashboard";
+	const redirectURL = res.locals.returnTo || "/dashboard";
 	delete req.session.returnTo;
 	setToastAndRedirect(res, "Welcome back!", "success", redirectURL);
 };
