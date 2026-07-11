@@ -19,7 +19,7 @@
 				</div>
 				<div class="mb-3">
 					<label for="link">Question link</label>
-						<input type="url" class="form-control" name="question[link]" id="link" placeholder="Enter the question link" value="<%= link %>" required />
+						<input type="url" class="form-control" name="question[link]" id="link" placeholder="Enter the question link" value="<%= link %>" pattern="https?://.*" required />
 					<div class="valid-feedback">Looks good!</div>
 					<div class="invalid-feedback">Please enter a valid question link.</div>
 				</div>
@@ -90,7 +90,7 @@
 				</div>
 				<div class="mb-3">
 					<label for="solutionLink">Solution link</label>
-					<input type="url" class="form-control" name="question[solutionLink]" id="solutionLink" placeholder="Enter the solution link" value="<%= solutionLink?solutionLink:"" %>"/>
+					<input type="url" class="form-control" name="question[solutionLink]" id="solutionLink" placeholder="Enter the solution link" value="<%= solutionLink?solutionLink:"" %>" pattern="https?://.*" />
 					<div class="valid-feedback">Looks good!</div>
 					<div class="invalid-feedback">Please enter a valid link.</div>
 				</div>

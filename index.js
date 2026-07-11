@@ -7,6 +7,7 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import LocalStrategy from "passport-local";
+import ExpressMongoSanitize from "express-mongo-sanitize";
 
 import sessionCookieConfig from "./config/sessionCookie.js";
 import AppError from "./helpers/AppError.js";
@@ -36,6 +37,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/public")));
 
+// Fix for using express-mongo-sanitize in express 5: https://github.com/fiznool/express-mongo-sanitize/issues/202#issuecomment-2992569969
+app.use((req, res, next) => {
+	Object.defineProperty(req, "query", {
+		...Object.getOwnPropertyDescriptor(req, "query"),
+		value: req.query,
+		writable: true
+	});
+	next();
+});
+
+app.use(ExpressMongoSanitize({ replaceWith: "_" }));
+
 app.use(session(sessionCookieConfig));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -43,10 +56,6 @@ passport.use(new LocalStrategy({ usernameField: "email" }, User.authenticate()))
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-app.listen(3000, () => {
-	console.log("Listening on port 3000!");
-});
 
 app.use((req, res, next) => {
 	res.locals.currentUser = req.user;
@@ -79,4 +88,8 @@ app.use((err, req, res, next) => {
 	const { statusCode = 500 } = err;
 	if (!err.message) err.message = "An error occurred.";
 	res.status(statusCode).render("error", { err });
+});
+
+app.listen(3000, () => {
+	console.log("Listening on port 3000!");
 });

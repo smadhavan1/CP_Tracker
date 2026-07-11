@@ -11,7 +11,11 @@ const questionSchemaJoi = Joi.object({
 	question: Joi.object({
 		ID: Joi.string().required(),
 		title: Joi.string().required(),
-		link: Joi.string().uri().required(),
+		link: Joi.string()
+			.uri({
+				scheme: ["http", "https"]
+			})
+			.required(),
 		difficulty: Joi.string()
 			.valid(...difficultyLevels)
 			.required(),
@@ -26,7 +30,12 @@ const questionSchemaJoi = Joi.object({
 		timeTaken: Joi.number().integer().min(0).allow("").optional(),
 		notes: Joi.string().allow("").optional(),
 		favourite: Joi.boolean(),
-		solutionLink: Joi.string().uri().allow("").optional(),
+		solutionLink: Joi.string()
+			.uri({
+				scheme: ["http", "https"]
+			})
+			.allow("")
+			.optional(),
 		lastRevisionDate: Joi.date().max(endOfDay).allow("").optional(),
 		nextRevisionDate: Joi.date().min(startOfDay).allow("").optional(),
 		revisionCount: Joi.number().integer().min(0)
