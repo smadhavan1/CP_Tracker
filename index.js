@@ -8,12 +8,15 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 import LocalStrategy from "passport-local";
 import ExpressMongoSanitize from "express-mongo-sanitize";
+import crypto from "node:crypto";
+import helmet from "helmet";
 
 import sessionCookieConfig from "./config/sessionCookie.js";
 import AppError from "./helpers/AppError.js";
 import User from "./models/user.js";
 import questionRoutes from "./routes/questions.js";
 import userRoutes from "./routes/users.js";
+import ContentSecurityPolicy from "./security/ContentSecurityPolicy.js";
 
 mongoose
 	.connect("mongodb://127.0.0.1:27017/cp_tracker")
@@ -58,6 +61,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
+	res.locals.nonce = crypto.randomBytes(16).toString("base64");
 	res.locals.currentUser = req.user;
 	const ToastMessage = req.cookies?.ToastMessage || null;
 	const ToastType = req.cookies?.ToastType || null;
@@ -72,6 +76,8 @@ app.use((req, res, next) => {
 
 	next();
 });
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(ContentSecurityPolicy);
 
 app.use("/questions", questionRoutes);
 app.use("/", userRoutes);
