@@ -1,8 +1,15 @@
 <%- layout('layouts/boilerplate') %>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="/css/tagBox.css">
+<link rel="stylesheet" href="/css/placeholder.css">
 <h1 class="text-center">Questions</h1>
-<div class="my-3 container">
+	<div class="my-3 container">
+	<% if(questions.length===0){ %>
+	<div class="custom-placeholder my-5">
+		<p class="mb-3">You have not added any questions.</p>
+		<a class="btn btn-primary" href="/questions/new">Add one</a>
+	</div>
+	<% } else { %>
 	<form action="/questions">
 		<fieldset class="w-50 mx-auto border border-secondary rounded px-3 mb-3">
 			<legend class="float-none w-auto px-2 fs-6">Filters</legend>
@@ -91,4 +98,5 @@
 			</div>
 		</div>
 	<% } %>
+<% } %>
 </div>

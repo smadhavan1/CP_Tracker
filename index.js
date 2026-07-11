@@ -19,7 +19,7 @@ import userRoutes from "./routes/users.js";
 import ContentSecurityPolicy from "./security/ContentSecurityPolicy.js";
 
 mongoose
-	.connect("mongodb://127.0.0.1:27017/cp_tracker")
+	.connect(process.env.DB_URL)
 	.then(() => {
 		console.log("Connected to DB.");
 	})

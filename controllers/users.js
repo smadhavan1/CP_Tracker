@@ -57,6 +57,10 @@ const logout = (req, res) => {
 };
 
 const dashboard = async (req, res) => {
+	const owned = await Question.find({ owner: req.user._id });
+	if (owned.length === 0) {
+		return res.render("users/dashboard", { isEmpty: true });
+	}
 	const difficultyPipeline = [{ $match: { owner: req.user._id } }, { $group: { _id: "$difficulty", count: { $count: {} } } }, { $addFields: { __order: { $indexOfArray: [difficultyLevels, "$_id"] } } }, { $sort: { __order: 1 } }];
 	const difficultyCounts = await Question.aggregate(difficultyPipeline);
 	const difficultyData = {
@@ -159,7 +163,7 @@ const dashboard = async (req, res) => {
 			scales: { x: { ticks: { precision: 0 } } }
 		}
 	};
-	res.render("users/dashboard", { difficultyConfig, platformConfig, topicConfig, statusConfig });
+	res.render("users/dashboard", { isEmpty: false, difficultyConfig, platformConfig, topicConfig, statusConfig });
 };
 
 export { registerForm, register, loginForm, login, logout, dashboard };

@@ -1,16 +1,28 @@
 <%- layout('layouts/boilerplate') %>
 <link rel="stylesheet" href="/css/dashboard.css">
+<link rel="stylesheet" href="/css/placeholder.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <h1 class="text-center">Dashboard</h1>
+
+<% if(isEmpty){ %>
+    <div class="custom-placeholder my-5">
+        <p class="mb-3">You have not added any questions.</p>
+        <a class="btn btn-primary" href="/questions/new">Add one</a>
+    </div>
+<% } %>
 
 <div class="row mt-4">
     <div class="col-12 col-md-6">
         <div class="card border-1 rounded-4 mb-5">
             <div class="card-body p-4">
                 <h6 class="card-title fw-semibold text-center mb-3">Difficulty Distribution</h6>
-                <div class="doughnut">
-                    <canvas id="difficultyChart"></canvas>
-                </div>
+                <% if(!isEmpty) {%>
+                    <div class="doughnut">
+                        <canvas id="difficultyChart"></canvas>
+                    </div>
+                <% } else { %>
+                    <p class="custom-placeholder text-body-secondary">No questions added yet</p>
+                <% } %>
             </div>
         </div>
     </div>
@@ -18,9 +30,13 @@
         <div class="card border-1 rounded-4 mb-5">
             <div class="card-body p-4">
                 <h6 class="card-title fw-semibold text-center mb-3">Status Distribution</h6>
-                <div class="doughnut">
-                    <canvas id="statusChart"></canvas>
-                </div>
+                <% if(!isEmpty) {%>
+                    <div class="doughnut">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                <% } else { %>
+                    <p class="custom-placeholder text-body-secondary">No questions added yet</p>
+                <% } %>
             </div>
         </div>
     </div>
@@ -29,28 +45,38 @@
 <div class="card border-1 rounded-4 mb-5">
     <div class="card-body p-4">
         <h6 class="card-title fw-semibold text-center mb-3">Platform Distribution</h6>
-        <div class="bar">
-            <canvas id="platformChart"></canvas>
-        </div>
+        <% if(!isEmpty) {%>
+            <div class="bar">
+                <canvas id="platformChart"></canvas>
+            </div>
+        <% } else { %>
+            <p class="custom-placeholder text-body-secondary">No questions added yet</p>
+        <% } %>
     </div>
 </div>
 
 <div class="card border-1 rounded-4">
     <div class="card-body p-4">
         <h6 class="card-title fw-semibold text-center mb-3">Topic Distribution</h6>
-        <div class="bar">
-            <canvas id="topicChart"></canvas>
-        </div>
+        <% if(!isEmpty) {%>
+            <div class="bar">
+                <canvas id="topicChart"></canvas>
+            </div>
+        <% } else { %>
+            <p class="custom-placeholder text-body-secondary">No questions added yet</p>
+        <% } %>
     </div>
 </div>
 
 <script nonce="<%= nonce %>">
-    const difficultyConfig = <%- JSON.stringify(difficultyConfig) %>;
-    const statusConfig = <%- JSON.stringify(statusConfig) %>;
-    const platformConfig = <%- JSON.stringify(platformConfig) %>;
-    const topicConfig = <%- JSON.stringify(topicConfig) %>;
-    new Chart(document.getElementById('difficultyChart'),difficultyConfig);
-    new Chart(document.getElementById('statusChart'),statusConfig);
-    new Chart(document.getElementById('platformChart'),platformConfig);
-    new Chart(document.getElementById('topicChart'),topicConfig);
+    <% if(!isEmpty) { %>
+        const difficultyConfig = <%- JSON.stringify(difficultyConfig) %>;
+        const statusConfig = <%- JSON.stringify(statusConfig) %>;
+        const platformConfig = <%- JSON.stringify(platformConfig) %>;
+        const topicConfig = <%- JSON.stringify(topicConfig) %>;
+        new Chart(document.getElementById('difficultyChart'),difficultyConfig);
+        new Chart(document.getElementById('statusChart'),statusConfig);
+        new Chart(document.getElementById('platformChart'),platformConfig);
+        new Chart(document.getElementById('topicChart'),topicConfig);
+    <% } %>
 </script>
