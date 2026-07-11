@@ -7,14 +7,14 @@ const fontSrcUrls = ["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/"
 
 const ContentSecurityPolicy = helmet.contentSecurityPolicy({
 	directives: {
-		defaultSrc: [],
+		defaultSrc: ["'none'"],
 		connectSrc: ["'self'", ...connectSrcUrls],
 		scriptSrc: ["'self'", (req, res) => `'nonce-${res.locals.nonce}'`, ...scriptSrcUrls],
 		styleSrc: ["'self'", ...styleSrcUrls],
-		workerSrc: ["'self'", "blob:"],
-		objectSrc: [],
-		imgSrc: ["'self'", "blob:", "data:"],
-		fontSrc: ["'self'", ...fontSrcUrls]
+		workerSrc: ["'none'"],
+		objectSrc: ["'none'"],
+		imgSrc: ["data:"],
+		fontSrc: [...fontSrcUrls]
 	}
 });
 
