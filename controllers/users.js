@@ -11,20 +11,25 @@ const registerForm = (req, res) => {
 	if (req.isAuthenticated()) {
 		return setToastAndRedirect(res, "You are already logged in!", "info", "/dashboard");
 	}
-	res.render("users/register");
+	if (process.env.REGISTRATIONS_ENABLED === "true") return res.render("users/register");
+	else return setToastAndRedirect(res, "Registrations are currently disabled!", "error", "/login");
 };
 
 const register = async (req, res) => {
-	try {
-		const { email, password } = req.body;
-		const user = new User({ email });
-		const registeredUser = await User.register(user, password);
-		req.login(registeredUser, (error) => {
-			if (error) return next(error);
-			setToastAndRedirect(res, "Welcome to CP Tracker!", "success", "/dashboard");
-		});
-	} catch (error) {
-		setToastAndRedirect(res, `${error.message}`, "error", "/register");
+	if (process.env.REGISTRATIONS_ENABLED === "true") {
+		try {
+			const { email, password } = req.body;
+			const user = new User({ email });
+			const registeredUser = await User.register(user, password);
+			req.login(registeredUser, (error) => {
+				if (error) return next(error);
+				return setToastAndRedirect(res, "Welcome to CP Tracker!", "success", "/dashboard");
+			});
+		} catch (error) {
+			return setToastAndRedirect(res, `${error.message}`, "error", "/register");
+		}
+	} else {
+		return setToastAndRedirect(res, "Registrations are currently disabled!", "error", "/login");
 	}
 };
 

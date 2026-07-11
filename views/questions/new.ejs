@@ -56,7 +56,7 @@
 					<div class="overflow-y-auto mb-3 border border-secondary-subtle rounded p-1" id="tagBox">
 						<% for(let tag of tagList) { %>
 							<div class="d-inline-block m-1">
-								<label class="btn rounded-pill btn-sm btn-light" onchange="this.classList.toggle('btn-primary'); this.classList.toggle('btn-light');">
+								<label class="btn rounded-pill btn-sm btn-light q-tag">
 									<input type="checkbox" class="btn-check" name="question[tags][]" value="<%= tag %>">
 									<%= tag %>
 								</label>
@@ -117,3 +117,4 @@
 		</form>
 	</div>
 </div>
+<script src="/js/tags.js"></script>
