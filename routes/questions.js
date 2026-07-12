@@ -1,5 +1,5 @@
 import express from "express";
-import { validateQuestion, isLoggedIn, isOwner } from "../middleware.js";
+import { validateQuestion, isLoggedIn, isOwner } from "../expressMiddleware.js";
 import * as questions from "../controllers/questions.js";
 
 const router = express.Router();

@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 
 import * as users from "../controllers/users.js";
-import { isLoggedIn, storeReturnTo } from "../middleware.js";
+import { isLoggedIn, storeReturnTo } from "../expressMiddleware.js";
 
 const router = express.Router();
 
