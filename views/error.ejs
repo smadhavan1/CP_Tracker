@@ -3,7 +3,9 @@
     <div class="w-50 mx-auto">
         <div class="alert alert-danger" role="alert">
             <h4 class="alert-heading">Error <%= err.statusCode %>: <%= err.message %></h4>
-            <p class="text-break"><%= err.stack %></p>
+            <% if(process.env.NODE_ENV!=="production"){ %>
+                <p class="text-break"><%= err.stack %></p>
+            <% } %>
         </div>
     </div>
 </div>
