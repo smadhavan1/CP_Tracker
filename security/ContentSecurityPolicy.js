@@ -13,7 +13,7 @@ const ContentSecurityPolicy = helmet.contentSecurityPolicy({
 		styleSrc: ["'self'", ...styleSrcUrls],
 		workerSrc: ["'none'"],
 		objectSrc: ["'none'"],
-		imgSrc: ["data:"],
+		imgSrc: ["'self'", "data:"],
 		fontSrc: [...fontSrcUrls]
 	}
 });

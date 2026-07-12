@@ -1,0 +1,41 @@
+body {
+	background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+	background-size: 40px 40px;
+	background-position: center center;
+	min-height: 100vh;
+}
+
+.container,
+.cover-container {
+	min-height: 100vh;
+	max-width: 80vw;
+}
+
+.nav-link {
+	padding: 0.25rem 0;
+	font-weight: 700;
+	color: rgba(255, 255, 255, 0.75);
+	margin-left: 1rem;
+	border-bottom: 0.25rem solid transparent;
+}
+
+.nav-link:hover {
+	color: rgba(255, 255, 255, 0.5);
+	border-bottom-color: rgba(255, 255, 255, 0.75);
+}
+
+.nav-link.active {
+	color: white;
+	border-bottom-color: white;
+}
+
+.btn-secondary,
+.btn-secondary:hover {
+	color: #333333;
+	text-shadow: none;
+}
+
+#features {
+	background-color: #0a0a0a;
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
