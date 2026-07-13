@@ -66,8 +66,15 @@ const dashboard = async (req, res) => {
 	if (owned.length === 0) {
 		return res.render("users/dashboard", { isEmpty: true });
 	}
-	const difficultyPipeline = [{ $match: { owner: req.user._id } }, { $group: { _id: "$difficulty", count: { $count: {} } } }, { $addFields: { __order: { $indexOfArray: [difficultyLevels, "$_id"] } } }, { $sort: { __order: 1 } }];
-	const difficultyCounts = await Question.aggregate(difficultyPipeline);
+	const difficultyPipeline = [{ $match: { owner: req.user._id } }, { $group: { _id: "$difficulty", count: { $count: {} } } }];
+	const partialDifficultyCounts = await Question.aggregate(difficultyPipeline);
+	const difficultyCounts = difficultyLevels.map((level) => {
+		const difficultyCount = partialDifficultyCounts.find((count) => count._id === level);
+		return {
+			_id: level,
+			count: difficultyCount ? difficultyCount.count : 0
+		};
+	});
 	const difficultyData = {
 		labels: difficultyCounts.map((difficultyCount) => {
 			return difficultyCount._id;
@@ -88,8 +95,15 @@ const dashboard = async (req, res) => {
 		options: { plugins: { legend: { labels: { boxWidth: 25 } } } }
 	};
 
-	const statusPipeline = [{ $match: { owner: req.user._id } }, { $group: { _id: "$status", count: { $count: {} } } }, { $addFields: { __order: { $indexOfArray: [statusOptions, "$_id"] } } }, { $sort: { __order: 1 } }];
-	const statusCounts = await Question.aggregate(statusPipeline);
+	const statusPipeline = [{ $match: { owner: req.user._id } }, { $group: { _id: "$status", count: { $count: {} } } }];
+	const partialStatusCounts = await Question.aggregate(statusPipeline);
+	const statusCounts = statusOptions.map((status) => {
+		const statusCount = partialStatusCounts.find((count) => count._id === status);
+		return {
+			_id: status,
+			count: statusCount ? statusCount.count : 0
+		};
+	});
 	const statusData = {
 		labels: statusCounts.map((statusCount) => {
 			return statusCount._id;
