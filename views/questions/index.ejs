@@ -52,7 +52,7 @@
 					<% for(let tag of tagList) { %>
 						<% const isChecked = display.tags && display.tags.includes(tag); %>
 						<div class="d-inline-block m-1">
-							<label class="btn rounded-pill btn-sm <%= isChecked ? 'btn-primary' : 'btn-light' %>" onchange="this.classList.toggle('btn-primary'); this.classList.toggle('btn-light');">
+							<label class="btn rounded-pill btn-sm <%= isChecked ? 'btn-primary' : 'btn-light' %> q-tag">
 								<input type="checkbox" class="btn-check" name="tags" value="<%= tag %>" <%= isChecked ? 'checked' : '' %>>
 								<%= tag %>
 							</label>
@@ -100,3 +100,4 @@
 	<% } %>
 <% } %>
 </div>
+<script src="/js/tags.js"></script>

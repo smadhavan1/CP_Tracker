@@ -1,5 +1,6 @@
 import BaseJoi from "joi";
 import sanitizeHtml from "sanitize-html";
+import { DateTime } from "luxon";
 
 import difficultyLevels from "./constants/difficultyLevels.js";
 import platforms from "./constants/platforms.js";
@@ -28,8 +29,15 @@ const extension = (joi) => ({
 
 const Joi = BaseJoi.extend(extension);
 
-const startOfDay = new Date(Date.now()).setHours(0, 0, 0);
-const endOfDay = new Date(Date.now()).setHours(23, 59, 59);
+const startOfDay = DateTime.now()
+  .setZone("IST")
+  .startOf("day")
+  .toJSDate();
+
+const endOfDay = DateTime.now()
+  .setZone("IST")
+  .endOf("day")
+  .toJSDate();
 
 const questionSchemaJoi = Joi.object({
 	question: Joi.object({
