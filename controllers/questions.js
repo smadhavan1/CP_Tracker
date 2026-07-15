@@ -45,7 +45,7 @@ const index = async (req, res) => {
 	const questions = await Question.aggregate(aggregationPipeline);
 	const display = { ...DBQuery };
 	display.title = req.query.title;
-	display.tags = req.query.tags;
+	display.tags = DBQueryTags;
 	display.sortBy = req.query.sortBy;
 	res.render("questions/index", { questions, difficultyLevels, platforms, statusOptions, tagList, display });
 };
