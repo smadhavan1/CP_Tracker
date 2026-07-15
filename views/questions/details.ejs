@@ -1,5 +1,5 @@
 <%- layout('layouts/boilerplate') %>
-<% const dateFormatter = new Intl.DateTimeFormat("en-GB", {dateStyle: "full"});%>
+<% const dateFormatter = new Intl.DateTimeFormat("en-GB", {timeZone:"IST", dateStyle: "full"});%>
 <div class="mx-auto my-3 w-50">
 	<h1><%= ID %>. <%= title %> <% if(favourite) { %> ⭐ <% } else { %> ☆ <% } %></h1>
 	<section id="question">
