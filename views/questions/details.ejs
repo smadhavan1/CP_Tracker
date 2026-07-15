@@ -20,7 +20,7 @@
 	</section>
 	<hr />
 	<section id="solution">
-		<span class="me-2">Status : <%= status %></span>
+		<p class="me-2">Status : <%= status %></p>
 		<% if(solvedDate) {%>
 		<p>Solved on : <%= dateFormatter.format(solvedDate) %></p>
 		<% } %> <% if(timeTaken) {%>
@@ -28,7 +28,7 @@
 		<% } %> <% if(notes) {%>
 		<p>Notes: <%= notes %></p>
 		<% } %> <% if(solutionLink) { %>
-		<a href="<%= solutionLink %>">Solution Link</a>
+		<p><a href="<%= solutionLink %>">Solution Link</a></p>
 		<% } %>
 	</section>
 	<hr />
