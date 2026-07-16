@@ -4,12 +4,6 @@
 <link rel="stylesheet" href="/css/placeholder.css">
 <h1 class="my-3 text-center">Questions</h1>
 	<div class="my-3 container">
-	<% if(questions.length===0){ %>
-	<div class="custom-placeholder my-5">
-		<p class="mb-3">You have not added any questions.</p>
-		<a class="btn btn-primary" href="/questions/new">Add one</a>
-	</div>
-	<% } else { %>
 	<form action="/questions/1">
 		<fieldset class="w-50 mx-auto border border-secondary rounded px-3 mb-3">
 			<legend class="float-none w-auto px-2 fs-6">Filters</legend>
@@ -76,6 +70,12 @@
 			</div>
 		</fieldset>
 	</form>
+	<% if(questions.length===0){ %>
+	<div class="custom-placeholder my-5">
+		<p class="mb-3">You have not added any questions <%= queryString?"that match the conditions.":"." %></p>
+		<a class="btn btn-primary" href="/questions/new">Add one</a>
+	</div>
+	<% } else { %>
 	<% for(let question of questions){ %>
 		<div class="card mb-3 w-50 mx-auto">
 			<h5 class="card-header"><%= question.platform %> #<%= question.ID %></h5>

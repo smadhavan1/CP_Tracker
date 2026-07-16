@@ -44,10 +44,10 @@ const index = async (req, res) => {
 		}
 	}
 
-	const num = Math.ceil((await Question.aggregate(aggregationPipeline)).length / 10);
+	const num = Math.max(1, Math.ceil((await Question.aggregate(aggregationPipeline)).length / 10));
 
-	if (page <= 0) return res.redirect("/questions/1");
-	if (page > num) return res.redirect(`/questions/${num}`);
+	if (page <= 0) return res.redirect(`/questions/1?${queryString}`);
+	if (page > num) return res.redirect(`/questions/${num}?${queryString}`);
 
 	aggregationPipeline.push({ $skip: (page - 1) * 10 }, { $limit: 10 });
 
