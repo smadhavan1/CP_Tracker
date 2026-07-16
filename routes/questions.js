@@ -7,7 +7,8 @@ const router = express.Router();
 router.get("/new", isLoggedIn, questions.newForm);
 
 router
-.get("/", isLoggedIn, questions.index)
+.get("/",(req,res)=>res.redirect("/questions/1"))
+.get("/:page", isLoggedIn, questions.index)
 .post("/", isLoggedIn, validateQuestion, questions.addQuestion);
 
 router

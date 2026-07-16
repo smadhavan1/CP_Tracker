@@ -10,7 +10,7 @@
 		<a class="btn btn-primary" href="/questions/new">Add one</a>
 	</div>
 	<% } else { %>
-	<form action="/questions">
+	<form action="/questions/1">
 		<fieldset class="w-50 mx-auto border border-secondary rounded px-3 mb-3">
 			<legend class="float-none w-auto px-2 fs-6">Filters</legend>
 			<div class="mb-3">
@@ -98,6 +98,15 @@
 			</div>
 		</div>
 	<% } %>
+	<nav class="w-50 mx-auto">
+		<ul class="pagination justify-content-center">
+			<li class="page-item"><a class="page-link <%= page==1?"disabled":"" %>" href="/questions/<%= page-1 %>?<%= queryString %>">Previous</a></li>
+			<% for(let i=1;i<=num;i++) { %>
+				<li class="page-item"><a class="page-link <%= i==page?"active":"" %>" href="/questions/<%= i %>?<%= queryString %>"><%= i %></a></li>
+			<% } %>
+			<li class="page-item"><a class="page-link <%= page==num?"disabled":"" %>" href="/questions/<%= parseInt(page)+1 %>?<%= queryString %>">Next</a></li>
+		</ul>
+	</nav>
 <% } %>
 </div>
 <script src="/js/tags.js"></script>

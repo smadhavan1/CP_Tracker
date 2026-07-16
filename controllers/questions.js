@@ -10,6 +10,8 @@ const newForm = (req, res) => {
 };
 
 const index = async (req, res) => {
+	const queryString = req.url.split("?")[1];
+	const page = parseInt(req.params.page);
 	const DBQuery = { owner: req.user?._id };
 	const title = req.query.title;
 	const difficulty = req.query.difficulty;
@@ -42,12 +44,19 @@ const index = async (req, res) => {
 		}
 	}
 
+	const num = Math.ceil((await Question.aggregate(aggregationPipeline)).length / 10);
+
+	if (page <= 0) return res.redirect("/questions/1");
+	if (page > num) return res.redirect(`/questions/${num}`);
+
+	aggregationPipeline.push({ $skip: (page - 1) * 10 }, { $limit: 10 });
+
 	const questions = await Question.aggregate(aggregationPipeline);
 	const display = { ...DBQuery };
 	display.title = req.query.title;
 	display.tags = DBQueryTags;
 	display.sortBy = req.query.sortBy;
-	res.render("questions/index", { questions, difficultyLevels, platforms, statusOptions, tagList, display });
+	res.render("questions/index", { questions, difficultyLevels, platforms, statusOptions, tagList, display, num, page, queryString });
 };
 
 const addQuestion = async (req, res) => {
