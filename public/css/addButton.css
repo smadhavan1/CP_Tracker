@@ -1,0 +1,12 @@
+.float-container {
+	position: fixed;
+	bottom: 20px;
+}
+
+.float-button {
+	position: absolute;
+	right: 50px;
+	bottom: 0;
+	width: 55px;
+	height: 55px;
+}

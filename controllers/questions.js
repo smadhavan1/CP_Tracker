@@ -6,7 +6,8 @@ import statusOptions from "../constants/statusOptions.js";
 import setToastAndRedirect from "../helpers/setToast.js";
 
 const newForm = (req, res) => {
-	res.render("questions/new", { difficultyLevels, platforms, statusOptions, tagList });
+	const { last } = req.params;
+	res.render("questions/new", { difficultyLevels, platforms, statusOptions, tagList, last });
 };
 
 const index = async (req, res) => {
@@ -21,6 +22,8 @@ const index = async (req, res) => {
 	const DBQueryTags = tags ? (Array.isArray(tags) ? tags : [tags]) : [];
 	const sortBy = req.query.sortBy;
 	const options = {};
+
+	if (isNaN(page)) return res.redirect("/questions/1");
 
 	if (title) DBQuery.title = new RegExp(title, "i");
 	if (difficulty) DBQuery.difficulty = difficulty;
@@ -46,8 +49,8 @@ const index = async (req, res) => {
 
 	const num = Math.max(1, Math.ceil((await Question.aggregate(aggregationPipeline)).length / 10));
 
-	if (page <= 0) return res.redirect(`/questions/1?${queryString}`);
-	if (page > num) return res.redirect(`/questions/${num}?${queryString}`);
+	if (page <= 0) return res.redirect(`/questions/1?${queryString ?? ""}`);
+	if (page > num) return res.redirect(`/questions/${num}?${queryString ?? ""}`);
 
 	aggregationPipeline.push({ $skip: (page - 1) * 10 }, { $limit: 10 });
 
@@ -60,11 +63,12 @@ const index = async (req, res) => {
 };
 
 const addQuestion = async (req, res) => {
+	const { last } = req.params;
 	let question = req.body.question;
 	question.owner = req.user;
 
-	await Question.insertOne({ ...question });
-	setToastAndRedirect(res, "Successfully added the question!", "success", "/questions/1");
+	const newQuestion = await Question.insertOne({ ...question });
+	setToastAndRedirect(res, "Successfully added the question!", "success", `/questions/${last}/${newQuestion._id}`);
 };
 
 const getQuestion = async (req, res) => {
@@ -96,7 +100,7 @@ const editQuestion = async (req, res) => {
 };
 
 const deleteQuestion = async (req, res) => {
-	const { id, page } = req.params;
+	const { id } = req.params;
 	const question = await Question.findByIdAndDelete(id);
 	setToastAndRedirect(res, "Successfully deleted the question!", "success", "/questions/1");
 };

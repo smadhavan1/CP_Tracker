@@ -4,12 +4,12 @@ import * as questions from "../controllers/questions.js";
 
 const router = express.Router();
 
-router.get("/new", isLoggedIn, questions.newForm);
+router.get("/:last/new", isLoggedIn, questions.newForm);
 
 router
 .get("/",(req,res)=>res.redirect("/questions/1"))
 .get("/:page", isLoggedIn, questions.index)
-.post("/", isLoggedIn, validateQuestion, questions.addQuestion);
+.post("/:last", isLoggedIn, validateQuestion, questions.addQuestion);
 
 router
 .get("/:page/:id", isLoggedIn, isOwner, questions.getQuestion)
