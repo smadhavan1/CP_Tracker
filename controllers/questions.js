@@ -64,41 +64,41 @@ const addQuestion = async (req, res) => {
 	question.owner = req.user;
 
 	await Question.insertOne({ ...question });
-	setToastAndRedirect(res, "Successfully added the question!", "success", "/questions");
+	setToastAndRedirect(res, "Successfully added the question!", "success", "/questions/1");
 };
 
 const getQuestion = async (req, res) => {
-	const { id } = req.params;
+	const { id, page } = req.params;
 	const question = await Question.findById(id).lean();
-	res.render("questions/details", { ...question });
+	res.render("questions/details", { ...question, page });
 };
 
 const editForm = async (req, res) => {
-	const { id } = req.params;
+	const { id, page } = req.params;
 	const question = await Question.findById(id).lean();
 
 	question.solvedDate = question.solvedDate ? question.solvedDate.toISOString().split("T")[0] : null;
 	question.lastRevisionDate = question.lastRevisionDate ? question.lastRevisionDate.toISOString().split("T")[0] : null;
 	question.nextRevisionDate = question.nextRevisionDate ? question.nextRevisionDate.toISOString().split("T")[0] : null;
 
-	res.render("questions/edit", { ...question, difficultyLevels, platforms, statusOptions, tagList });
+	res.render("questions/edit", { ...question, difficultyLevels, platforms, statusOptions, tagList, page });
 };
 
 const editQuestion = async (req, res) => {
-	const { id } = req.params;
+	const { id, page } = req.params;
 	let question = req.body.question;
 
 	if (question.status !== "Solved") question.solvedDate = "";
 	question.tags = question.tags || [];
 
 	await Question.findByIdAndUpdate(id, { ...question }, { runValidators: true });
-	setToastAndRedirect(res, "Successfully edited the question!", "success", `/questions/${id}`);
+	setToastAndRedirect(res, "Successfully edited the question!", "success", `/questions/${page}/${id}`);
 };
 
 const deleteQuestion = async (req, res) => {
-	const { id } = req.params;
+	const { id, page } = req.params;
 	const question = await Question.findByIdAndDelete(id);
-	setToastAndRedirect(res, "Successfully deleted the question!", "success", "/questions");
+	setToastAndRedirect(res, "Successfully deleted the question!", "success", "/questions/1");
 };
 
 export { newForm, index, addQuestion, getQuestion, editForm, editQuestion, deleteQuestion };

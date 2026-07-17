@@ -4,7 +4,7 @@
 <div class="my-3 container">
 	<h1 class="text-center">Edit question</h1>
 	<div class="col-md-7 mx-auto">
-		<form action="/questions/<%= _id %>?_method=patch" method="post" class="validation-required" novalidate>
+		<form action="/questions/<%= page %>/<%= _id %>?_method=patch" method="post" class="validation-required" novalidate>
 			<div class="container">
 				<div class="mb-3">
 					<label for="ID">Question ID</label>

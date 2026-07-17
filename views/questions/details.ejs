@@ -44,8 +44,8 @@
 	</section>
 	<hr />
 	<div class="d-flex gap-2">
-		<a href="/questions/<%= _id %>/edit" class="btn btn-warning">Edit</a>
-		<form class="d-inline" action="/questions/<%= _id %>?_method=delete" method="post">
+		<a href="/questions/<%= page %>/<%= _id %>/edit" class="btn btn-warning">Edit</a>
+		<form class="d-inline" action="/questions/<%= page  %>/<%= _id %>?_method=delete" method="post">
 			<button class="btn btn-danger">Delete</button>
 		</form>
 	</div>

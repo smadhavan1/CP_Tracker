@@ -12,10 +12,10 @@ router
 .post("/", isLoggedIn, validateQuestion, questions.addQuestion);
 
 router
-.get("/:id", isLoggedIn, isOwner, questions.getQuestion)
-.patch("/:id", isLoggedIn, isOwner, validateQuestion, questions.editQuestion)
-.delete("/:id", isLoggedIn, isOwner, questions.deleteQuestion);
+.get("/:page/:id", isLoggedIn, isOwner, questions.getQuestion)
+.patch("/:page/:id", isLoggedIn, isOwner, validateQuestion, questions.editQuestion)
+.delete("/:page/:id", isLoggedIn, isOwner, questions.deleteQuestion);
 
-router.get("/:id/edit", isLoggedIn, isOwner, questions.editForm);
+router.get("/:page/:id/edit", isLoggedIn, isOwner, questions.editForm);
 
 export default router;

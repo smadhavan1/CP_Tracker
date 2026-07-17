@@ -83,7 +83,7 @@
 				<h5 class="card-title"><%= question.title %> (<%= question.difficulty %>)</h5>
 				<p><%= question.status %></p>
 				<div class="d-flex gap-2">
-					<a href="/questions/<%= question._id %>" class="btn btn-primary">Details</a>
+					<a href="/questions/<%= page %>/<%= question._id %>" class="btn btn-primary">Details</a>
 					<a href="<%= question.link %>" class="d-inline-flex btn btn-primary" target="_blank"><%= question.platform %><i class="bi bi-box-arrow-up-right small ms-1"></i></a>
 				</div>
 			</div>
